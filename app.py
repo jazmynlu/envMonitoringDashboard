@@ -18,7 +18,8 @@ print('Welcome to the David Geffen Gallery HOBO Environmental Monitoring Dashboa
 
 # -- Import and clean data (importing csv into pandas)-------------------------------------------------
 
-data_display = input('Enter 0 for before HVAC data, 1 for after HVAC data: ')
+#data_display = input('Enter 0 for before HVAC data, 1 for after HVAC data: ')
+data_display = '1'
 
 print ('Loading Data...')
 
