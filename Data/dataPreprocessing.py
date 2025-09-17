@@ -386,25 +386,98 @@ with open("moving_7day_range_09022025.pkl",'wb') as file:
 end_time = time.time()
 print(f"That took: {end_time-start_time} seconds")
 
+#%% Process post HVAC Data (September 15th Data)
+start_time=time.time()
+directory_path = 'postHVACData_09152025/'
+
+temp_df = pd.DataFrame({'Date-Time (PST/PDT)':[]})
+rh_df = pd.DataFrame({'Date-Time (PST/PDT)':[]})
+dp_df = pd.DataFrame({'Date-Time (PST/PDT)':[]})
+light_df = pd.DataFrame({'Date-Time (PST/PDT)':[]})
+
+dtypes = {'Temperature , °C':temp_df, 'RH , %':rh_df, 'Dew Point , °C':dp_df,'Light , lux':light_df}
+
+cutoff = [pd.Timestamp("2025-07-30 13:00:00"), pd.Timestamp("2025-09-15 15:30:00")]
+
+for excel_file in glob.glob(os.path.join(directory_path, '*.xlsx')):
+    df = pd.read_excel(excel_file, sheet_name='Data')
+    if 'Date-Time (PDT)' in df.columns:
+        df = df.rename(columns={'Date-Time (PDT)': 'Date-Time (PST/PDT)'})
+    df["Date-Time (PST/PDT)"] = pd.to_datetime(df["Date-Time (PST/PDT)"])
+    name = excel_file[35:-29]
+    if name in ['01 W-1', '58 N','40 W','36 E','41 N','31 S','22 N']: # these sensors were collecting data every 10 minutes, set so now it's every 15 minutes
+        df = df.set_index("Date-Time (PST/PDT)")
+        df = df.resample("15min").interpolate("time").reset_index()
+    if name in ['43 W', '43 E']: #sensors started before they were installed... cutting off that data
+        df = df[(df["Date-Time (PST/PDT)"] < cutoff[1])&(df["Date-Time (PST/PDT)"] > pd.Timestamp("2025-08-08 18:00:00"))]
+    else:
+        df = df[(df["Date-Time (PST/PDT)"] < cutoff[1])&(df["Date-Time (PST/PDT)"] > cutoff[0])]
+    for d in dtypes.keys():
+        add_df = df[[d,'Date-Time (PST/PDT)']]
+        add_df = add_df.rename(columns={d:name})
+        dtypes[d] = pd.merge(dtypes[d], add_df, on='Date-Time (PST/PDT)', how='outer')
+# NOTE: when hobo sensors were labelled, 66S was mislabeled as 65 S and 65 S was mislabelled as 66 S. The filenames currently reflect this change, but the raw data may not. 
+# To sanity check, 66S lux should not be very high, and 65 S lux should be pretty high.
+
+sorted_dtypes = {}
+moving_24hour_average = {}
+moving_24hour_range = {}
+moving_7day_average = {}
+moving_7day_range = {}
+
+missing_hobos = [] # Check that none are in here!
+
+for key in sorted_circle_coords.keys():
+    if key not in dtypes[d].columns:
+        missing_hobos.append(key)
+for d in dtypes.keys():
+    missing_hobo_nans = pd.DataFrame(np.nan, index = dtypes[d].index, columns = missing_hobos)
+    all_dfs = pd.concat([dtypes[d],missing_hobo_nans],axis=1)
+    sorted_df= all_dfs.iloc[:,1:].sort_index(axis=1)
+    sorted_dtypes[d] = pd.concat([dtypes[d]['Date-Time (PST/PDT)'],sorted_df],axis=1)
+    windows_24hour = sorted_df.rolling(96)
+    windows_7day = sorted_df.rolling(672)
+    moving_24hour_average[d] = pd.concat([dtypes[d]['Date-Time (PST/PDT)'],windows_24hour.mean()],axis=1)
+    moving_24hour_range[d] = pd.concat([dtypes[d]['Date-Time (PST/PDT)'],windows_24hour.apply(lambda x: x.max()-x.min())],axis=1)
+    moving_7day_average[d] = pd.concat([dtypes[d]['Date-Time (PST/PDT)'],windows_7day.mean()],axis=1)
+    moving_7day_range[d] = pd.concat([dtypes[d]['Date-Time (PST/PDT)'],windows_7day.apply(lambda x: x.max()-x.min())],axis=1)
+with open("postHVACdata_09152025.pkl",'wb') as file:
+    pickle.dump(sorted_dtypes,file)
+with open("moving_24hour_average_09152025.pkl",'wb') as file:
+    pickle.dump(moving_24hour_average,file)  
+with open("moving_24hour_range_09152025.pkl",'wb') as file:
+    pickle.dump(moving_24hour_range,file)  
+with open("moving_7day_average_09152025.pkl",'wb') as file:
+    pickle.dump(moving_7day_average,file)  
+with open("moving_7day_range_09152025.pkl",'wb') as file:
+    pickle.dump(moving_7day_range,file)  
+end_time = time.time()
+print(f"That took: {end_time-start_time} seconds")
 #%% Process Weather Data from wunderground
 start_time=time.time()
 def F_to_C(F):
   C = (F - 32) * 5 / 9
   return C
-weather_data = pd.read_csv('wunderground_08282025.csv')
+weather_data = pd.read_csv('wunderground_08292025_to_09152025.csv')
 weather_data['Date-Time'] = weather_data['Date-Time'].apply(lambda x: pd.to_datetime(x))
 weather_data['Temperature'] = weather_data['Temperature'].apply(lambda x: F_to_C(x))
 weather_data['Dew Point'] = weather_data['Dew Point'].apply(lambda x: F_to_C(x))
 
-with open("wunderground_08282025.pkl",'wb') as file:
-    pickle.dump(weather_data,file)    
+with open("wunderground_08282025.pkl", "rb") as file:
+    old_weather_data = pickle.load(file)
+
+all_weather_data = pd.concat([old_weather_data,weather_data],axis=0)
+
+with open("wunderground_09152025.pkl",'wb') as file:
+    pickle.dump(all_weather_data,file)    
+    
 end_time = time.time()
 print(f"That took: {end_time-start_time} seconds")
 
 #%% Process outdoor Hobo data
 start_time=time.time()
 
-outside_PJA = pd.read_excel('22379393 Outside PJA 2025-09-02 16_33_27 PDT.xlsx', sheet_name = 'Data').drop(columns = '#')
+outside_PJA = pd.read_excel('22379393 Outside PJA 2025-09-16 09_30_24 PDT.xlsx', sheet_name = 'Data').drop(columns = '#')
 with open("outside_PJA.pkl",'wb') as file:
     pickle.dump(outside_PJA,file)
 end_time = time.time()

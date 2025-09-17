@@ -16,6 +16,8 @@ path to executable has to be updated below ("chromedriver_path").
 
 Zach Perzan, 2021-07-28"""
 
+# RUN WITH DEFAULT ENVIRONMENT!
+
 import time
 from datetime import datetime, timedelta
 
@@ -252,5 +254,5 @@ def scrape_multidate(station, start_date, end_date, freq):
     return df
 
 #%%
-df = scrape_multidate('KCALOSAN1069','2025-01-01', '2025-08-28', freq='5min')
-#df.to_csv('output.csv', index = True)
+df = scrape_multidate('KCALOSAN1069','2025-08-29', '2025-09-15', freq='5min')
+df.to_csv('wunderground_08292025_to_09152025.csv', index = True)

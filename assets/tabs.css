@@ -6,6 +6,7 @@
     background-color: #f9f9f9;
     padding: 0px 0px;
     border-bottom: 1px solid #d6d6d6;
+    font-family: "Verdana";
 }
 
 .custom-tab {
@@ -16,9 +17,9 @@
     border-left: 0px !important;
     border-right: 0px !important;
     border-bottom: 0px !important;
-    background-color: #fafbfc;
+    background-color: #f7eeed;
     padding: 8px !important;
-    font-family: "system-ui";
+    font-family: "Verdana";
     display: flex !important;
     align-items: center;
     justify-content: center;
@@ -28,5 +29,6 @@
     box-shadow: 1px 1px 0px white;
     border-left: 1px solid lightgrey !important;
     border-right: 1px solid lightgrey !important;
-    border-top: 3px solid #e30d0d !important;
+    border-top: 5px solid #e30d0d !important;
+    font-family: "Verdana";
 }

@@ -48,19 +48,19 @@ dtypes = {'Temperature , °C':pd.DataFrame({'Date-Time (PST/PDT)':[]}),
           'Dew Point , °C':pd.DataFrame({'Date-Time (PST/PDT)':[]}),
           'Light , lux':pd.DataFrame({'Date-Time (PST/PDT)':[]})}
 
-with open('Data/postHVACdata_09022025.pkl', 'rb') as file:
+with open('Data/postHVACdata_09152025.pkl', 'rb') as file:
     postHVAC = pickle.load(file)
-with open("Data/moving_24hour_average_09022025.pkl",'rb') as file:
+with open("Data/moving_24hour_average_09152025.pkl",'rb') as file:
     moving_24hour_average = pickle.load(file)  
-with open("Data/moving_24hour_range_09022025.pkl",'rb') as file:
+with open("Data/moving_24hour_range_09152025.pkl",'rb') as file:
     moving_24hour_range = pickle.load(file) 
-with open("Data/moving_7day_average_09022025.pkl",'rb') as file:
+with open("Data/moving_7day_average_09152025.pkl",'rb') as file:
     moving_7day_average = pickle.load(file) 
-with open("Data/moving_7day_range_09022025.pkl",'rb') as file:
+with open("Data/moving_7day_range_09152025.pkl",'rb') as file:
     moving_7day_range = pickle.load(file) 
 with open('Data/preHVACdata.pkl','rb') as file:
     preHVAC = pickle.load(file)
-with open('Data/wunderground_08282025.pkl', 'rb') as file:
+with open('Data/wunderground_09152025.pkl', 'rb') as file:
     weather_data = pickle.load(file)
 with open('Data/outside_PJA.pkl', 'rb') as file:
     outside_PJA = pickle.load(file)
@@ -69,11 +69,11 @@ with open('Data/outside_PJA.pkl', 'rb') as file:
 if data_display == '1':
     dtypes = postHVAC
     fmin_date_allowed=date(2025, 7, 30)
-    fmax_date_allowed=date(2025, 9, 2)
-    finitial_visible_month=date(2025, 8, 4)
-    fdate=date(2025, 8, 4)
-    fstart_date=date(2025, 8, 4)
-    fend_date=date(2025, 8, 7)
+    fmax_date_allowed=date(2025, 9, 15)
+    finitial_visible_month=date(2025, 8, 20)
+    fdate=date(2025, 8, 20)
+    fstart_date=date(2025, 8, 18)
+    fend_date=date(2025, 8, 24)
 elif data_display == '0':
     dtypes = preHVAC
     fmin_date_allowed=date(2025, 1, 8)
@@ -198,7 +198,7 @@ def create_base_fig(img_str):
             range=[cropped_img.height, 0],
             visible=False
         ),
-        margin=dict(l=0, r=0, t=0, b=0)
+        margin=dict(l=0, r=0, t=0, b=0),
     )
     return fig
 
@@ -206,15 +206,18 @@ def create_base_fig(img_str):
 app.layout = html.Div([
     html.Div(
         className="app-header",
-        children=[html.Div('David Geffen Gallery HOBO Environmental Monitoring Dashboard', className='app-header--title')]
+        children=[
+            html.Img(src='assets/lacma-logo.png', className="app-header--logo"),
+            html.Div('David Geffen Gallery HOBO Environmental Monitoring Dashboard', className='app-header--title')],
+        style={'display':'flex','alignItems':'center'}
     ),
     dcc.Tabs(id="graph_type", value='tab-1', 
         parent_className = 'custom-tabs',
         className='custom-tabs-container',
         children=[
-            dcc.Tab(label='DGG Map View', value='tab-1',className = 'custom_tab',
+            dcc.Tab(label='Map View', value='tab-1',className = 'custom_tab',
             selected_className='custom-tab--selected'),
-            dcc.Tab(label = "Daily DGG Map View", value = 'tab-2',className = 'custom_tab',
+            dcc.Tab(label = "Daily Map View", value = 'tab-2',className = 'custom_tab',
             selected_className='custom-tab--selected'),
             dcc.Tab(label='Time Series', value='tab-3',className = 'custom_tab',
             selected_className='custom-tab--selected'),
@@ -224,7 +227,7 @@ app.layout = html.Div([
             selected_className='custom-tab--selected'),
             dcc.Tab(label='Curtain Predictions', value='tab-5',className = 'custom_tab',
             selected_className='custom-tab--selected'),
-            dcc.Tab(label='HVAC Changes', value='tab-6',className = 'custom_tab',
+            dcc.Tab(label='HVAC Comparison', value='tab-6',className = 'custom_tab',
             selected_className='custom-tab--selected'),
             dcc.Tab(label='Weather', value = 'tab-8', className='custom_tab',
             selected_className='custom-tab--selected')
@@ -247,18 +250,29 @@ app.layout = html.Div([
                                     "Daily Max - Min: Relative Humidity (%)", "Daily Average: Relative Humidity (%)",
                                     "Daily Max: Light (lux)", "Daily Average: Light (lux)"],
                             value="Daily Max - Min: Temperature (C)",
-                            style = {'width':'75%', 
-                                     'height':'50px',     
+                            style = {'width':'65%', 
+                                     'height':'45px',     
                                      'color':'darkblue',
-                                     'fontSize': '20px', 
+                                     'fontFamily':'Verdana',
+                                     'fontSize': '18px', 
+                                     'margin': '0 auto',
                                      'fontWeight':'bold'})
                 ],
-                style={'display':'flex', 'flexDirection':'row', 'gap':'20px', 'margin':'0 auto', 'width':'100%'}
+                style={
+                    'display':'flex', 
+                    'flexDirection':'row', 
+                    'justifyContent': 'space-between',
+                    'alignItems':'left',
+                    'gap':'20px', 
+                    'margin':'20px auto 0 auto', 
+                    'width':'75%'}
             ),
             dcc.Graph(id='DGG_map',
                 config={'displayModeBar': True,  'responsive': True, 'autosizable': True},
-                style = { 'margin':'0 auto', 'width':'75%', 'pad':'20px'})
-            ], style={'display': 'block'}),  # tab 1 is visible initially
+                style = { 'margin':'10px auto 0 auto', 
+                         'width':'75%',
+                         'aspect-ratio':'22/13'})
+            ], style={'display': 'block', 'marginTop':'20px'}),  # tab 1 is visible initially
 
         html.Div(id='tab-2-content', children=[
             dcc.Store(id = 'base_fig_store2', data=create_base_fig(img_str).to_json()),
@@ -272,12 +286,19 @@ app.layout = html.Div([
                 dcc.Dropdown(id="slct_dtype_tab2",
                             options=["Temperature , °C", "RH , %", "Light , lux"],
                             value="Temperature , °C",
-                            style = {'width':'75%', 
-                                     'height':'50px',     
+                            style = {'width':'65%', 
+                                     'height':'45px',     
                                      'color':'darkblue',
-                                     'fontSize': '20px', 
+                                     'fontFamily':'Verdana',
+                                     'fontSize': '18px', 
                                      'fontWeight':'bold'})],              
-                style={'display':'flex', 'flexDirection':'row', 'gap':'20px', 'margin':'0 auto', 'width':'100%'}),
+                style={'display':'flex', 
+                       'flexDirection':'row',
+                       'justifyContent':'space-between',
+                       'alignItems':'left',
+                       'gap':'20px', 
+                       'margin':'20px auto 0 auto', 
+                       'width':'75%'}),
             html.Div(
                 dcc.Slider(
                     id='time_slider_tab2',
@@ -286,12 +307,13 @@ app.layout = html.Div([
                     step=15,
                     value=0, 
                     marks={i*60: f"{i:02d}:00" for i in range(0, 24)}),  # hourly labels),
-            style = {'width':'75%','margin':'0 auto'}),
+            style = {'width':'75%','margin':'20px auto 0 auto'}),
             html.Div(children=[
             dcc.Graph(id='DGG_map_tab2',
                 config={'displayModeBar': True,  'responsive': True, 'autosizable': True},
-                style = { 'margin':'0 auto', 'width':'75%', 'pad':'20px'})]),
-
+                style = { 'margin':'10px auto 0 auto', 
+                         'width':'75%', 
+                         'aspect-ratio':'22/13'})]),
             ], style={'display': 'none'}),  # hidden initially
         
         html.Div(id='tab-3-content', children=[
@@ -308,19 +330,34 @@ app.layout = html.Div([
                     ['30 S'],
                     id='sensor_select_tab3',
                     multi=True,
-                    style={'width': "40%",
-                           'height':'50px',     
+                    style={'width': "70%",
+                           'height':'45px',     
                             'color':'darkblue',
-                            'fontSize': '20px', 
+                            'fontSize': '18px', 
+                            'fontFamily':'Verdana',
                             'fontWeight':'bold'})],
-                style={'display':'flex', 'flexDirection':'row',
-                       'gap':'20px', 'margin':'0 auto', 'width':'100%'}    
-                ),
-            dcc.Graph(id='DGG_timeseries_temp', figure={}),
-            dcc.Graph(id='DGG_timeseries_rh', figure={}),
-            dcc.Graph(id='DGG_timeseries_dp', figure={}),
-            dcc.Graph(id='DGG_timeseries_light', figure={})
-            ], 
+                style={'display':'flex', 
+                       'flexDirection':'row',
+                       'justifyContent':'space-between',
+                       'alignItems':'left',
+                       'gap':'20px', 
+                       'margin':'20px auto 0 auto', 
+                       'width':'75%'} ),   
+            html.Div(
+                children=[
+                    dcc.Graph(id='DGG_timeseries_temp', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
+                    dcc.Graph(id='DGG_timeseries_rh', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
+                    dcc.Graph(id='DGG_timeseries_dp', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
+                    dcc.Graph(id='DGG_timeseries_light', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'})
+                ],
+                style={
+                    'display':'flex',
+                    'flexDirection':'column',
+                    'alignItems':'center',
+                    'gap':'5px',  # sets vertical spacing between graphs
+                    'margin':'10px auto 0 auto',
+                    'width':'75%'
+                })],
         style={'display': 'none'}),  # hidden initially
         
         html.Div(id='tab-7-content', children=[
@@ -338,41 +375,66 @@ app.layout = html.Div([
                     id='sensor_select_tab7',
                     multi=False,
                     style={'width': "40%",
-                           'height':'50px',     
+                           'height':'45px',     
                             'color':'darkblue',
-                            'fontSize': '20px', 
+                            'fontSize': '18px',
+                            'fontFamily':'Verdana',
                             'fontWeight':'bold'})],
-                style={'display':'flex', 'flexDirection':'row',
-                       'gap':'20px', 'margin':'0 auto', 'width':'100%'}    
+                style={'display':'flex', 
+                       'flexDirection':'row',
+                       'justifyContent':'space-between',
+                       'alignItems':'left',
+                       'gap':'20px', 
+                       'margin':'20px auto 0 auto', 
+                       'width':'75%'}  
                 ),
-            dcc.Graph(id='DGG_timeseries_single', figure={}),
-            dcc.Graph(id='DGG_rh_range',figure={})
+            html.Div(children=[            
+                dcc.Graph(id='DGG_timeseries_single', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
+                dcc.Graph(id='DGG_rh_range',figure={}, style={'width':'100%', 'aspect-ratio':'10/3'})],
+                style={
+                    'display':'flex',
+                    'flexDirection':'column',
+                    'alignItems':'center',
+                    'gap':'5px',  # sets vertical spacing between graphs
+                    'margin':'10px auto 0 auto',
+                    'width':'75%'
+                })
             ], 
         style={'display': 'none'}),  # hidden initially  
         
         html.Div(id='tab-4-content', children=[
             html.Div(children=[
-
-            dcc.DatePickerRange(
-                id='date_range_tab4',
-                min_date_allowed=fmin_date_allowed,
-                max_date_allowed=fmax_date_allowed,
-                initial_visible_month=finitial_visible_month,
-                start_date=fstart_date,
-                end_date=fend_date),
-            dcc.Dropdown(
-                list(circle_coords.keys()),
-                ['30 S'],
-                id='sensor_select_tab4',
-                multi=True,
-                style={'width': "40%",
-                       'height':'50px',     
-                        'color':'darkblue',
-                        'fontSize': '20px', 
-                        'fontWeight':'bold'})],
-            style={'display':'flex', 'flexDirection':'row'}    
-            ),
-            dcc.Graph(id='DGG_psycrhometric', figure={}, style = { 'margin':'0 auto', 'width':'75%', 'pad':'20px'}),
+                dcc.DatePickerRange(
+                    id='date_range_tab4',
+                    min_date_allowed=fmin_date_allowed,
+                    max_date_allowed=fmax_date_allowed,
+                    initial_visible_month=finitial_visible_month,
+                    start_date=fstart_date,
+                    end_date=fend_date),
+                dcc.Dropdown(
+                    list(circle_coords.keys()),
+                    ['30 S'],
+                    id='sensor_select_tab4',
+                    multi=True,
+                    style={'width': "70%",
+                           'height':'45px',     
+                            'color':'darkblue',
+                            'fontSize': '18px', 
+                            'fontFamily':'Verdana',
+                            'fontWeight':'bold'})],
+                style={'display':'flex', 
+                       'flexDirection':'row',
+                       'justifyContent':'space-between',
+                       'alignItems':'left',
+                       'gap':'20px', 
+                       'margin':'20px auto 0 auto', 
+                       'width':'75%'}    
+                ),
+            dcc.Graph(id='DGG_psycrhometric', figure={}, 
+                      style = { 'margin':'0 auto', 
+                               'width':'50%', 
+                               'pad':'20px',
+                               'aspect-ratio':'5/4'}),
         ], style={'display': 'none'}),
         
         html.Div(id='tab-5-content', children=[
@@ -386,7 +448,13 @@ app.layout = html.Div([
                         max_date_allowed=fmax_date_allowed,
                         initial_visible_month=finitial_visible_month,
                         date=fdate)],              
-                    style={'display':'flex', 'flexDirection':'row', 'gap':'20px', 'margin':'0 auto', 'width':'100%'}),
+                    style={'display':'flex', 
+                           'flexDirection':'row',
+                           'justifyContent':'space-between',
+                           'alignItems':'left',
+                           'gap':'20px', 
+                           'margin':'20px auto 0 auto', 
+                           'width':'75%'}),
                 html.Div(
                     dcc.Slider(
                         id='time_slider_curtain',
@@ -395,11 +463,13 @@ app.layout = html.Div([
                         step=15,
                         value=0, 
                         marks={i*60: f"{i:02d}:00" for i in range(0, 24)}),  # hourly labels),
-                style = {'width':'75%','margin':'0 auto'}),
+                style = {'width':'75%','margin':'20px auto 0 auto'}),
                 html.Div(children=[
                     dcc.Graph(id='DGG_map_curtain',
                         #config={'displayModeBar': True,  'responsive': True, 'autosizable': True},
-                        style = { 'margin':'0 auto', 'width':'75%', 'pad':'20px'})]),
+                        style = { 'margin':'10px auto 0 auto', 
+                                 'width':'75%',
+                                 'aspect-ratio':'22/13'})]),
                 ]),
                 html.Div(children=[
                     html.Div(children=[dcc.Dropdown(
@@ -408,10 +478,14 @@ app.layout = html.Div([
                         id='sensor_select_curtain',
                         multi=True,
                         style={'width': "100%",
-                               'height':'50px',     
+                               'height':'48px',     
                                 'color':'darkblue',
-                                'fontSize': '20px', 
-                                'fontWeight':'bold'})], style = {'margin':'0 auto', 'width':'75%', 'padding-top':'20px'}),   
+                                'fontSize': '18px', 
+                                'fontFamily':'Verdana',
+                                'fontWeight':'bold'})], 
+                        style = {'margin':'0 auto', 
+                                 'width':'75%', 
+                                 'padding-top':'20px'}),   
                     dcc.Graph(id='DGG_timeseries_curtain', config = {'displayModeBar':True, 'responsive':True, 'autosizable':True})],
                     style = { 'margin':'0 auto', 'width':'75%', 'pad':'40px'}),
                 dcc.Markdown('''
@@ -433,7 +507,7 @@ app.layout = html.Div([
                 The sensors that were designated as 50% are:
                 29 E, 29 N, 32 W, 32 N, 37 N, 55 N, 54 W, 19 E, 19 S, 18 S-2,
                 09 W-1, 01 W-1, 01 W-3, and 49 S
-                             ''')
+                             ''',style = {'width':'75%', 'margin':'10px auto 0 auto'})
             ],             
             style={'display': 'none'}),
         html.Div(id='tab-6-content', children=[
@@ -444,13 +518,24 @@ app.layout = html.Div([
                 id='sensor_select_tab6',
                 multi=False,
                 style={'width': "40%",
-                       'height':'50px',     
+                       'height':'48px',     
                         'color':'darkblue',
-                        'fontSize': '20px', 
+                        'fontSize': '18px',
+                        'fontFamily':'Verdana',
                         'fontWeight':'bold'})],
-            style={'display':'flex', 'flexDirection':'row'}    
+            style={'display':'flex', 
+                   'flexDirection':'row',
+                   'justifyContent':'space-between',
+                   'alignItems':'left',
+                   'gap':'20px', 
+                   'margin':'20px auto 0 auto', 
+                   'width':'75%'}   
             ),
-            dcc.Graph(id='HVAC_comp', figure={}, style = { 'margin':'0 auto', 'width':'75%', 'pad':'20px'}),
+            dcc.Graph(id='HVAC_comp', figure={}, 
+                      style = { 'margin':'0 auto', 
+                               'width':'50%', 
+                               'pad':'20px',
+                               'aspect-ratio':'5/4'}),
         ], style={'display': 'none'}),
         html.Div(id='tab-8-content', children=[
             html.Div(children=[
@@ -461,18 +546,32 @@ app.layout = html.Div([
                 initial_visible_month=finitial_visible_month,
                 start_date=fstart_date,
                 end_date=fend_date)], 
-            style={'display':'flex', 'flexDirection':'row'}),
-            
-            dcc.Graph(id='T_DP_RH', figure={}),
-            dcc.Graph(id='solar_radiation', figure={}),
-            dcc.Graph(id='wind_speed', figure={}),
-            dcc.Graph(id='precipitation', figure={}),
-            dcc.Graph(id='pressure', figure={}),
+            style={'display':'flex', 
+                   'flexDirection':'row',
+                   'justifyContent':'space-between',
+                   'alignItems':'left',
+                   'gap':'20px', 
+                   'margin':'20px auto 0 auto', 
+                   'width':'75%'} ),
+            html.Div(children=[
+                dcc.Graph(id='T_DP_RH', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
+                dcc.Graph(id='solar_radiation', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
+                dcc.Graph(id='wind_speed', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
+                dcc.Graph(id='precipitation', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
+                dcc.Graph(id='pressure', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'})],
+                style={
+                    'display':'flex',
+                    'flexDirection':'column',
+                    'alignItems':'center',
+                    'gap':'5px',  # sets vertical spacing between graphs
+                    'margin':'10px auto 0 auto',
+                    'width':'75%'
+                }),
             dcc.Markdown('''
             ### Weather Data
             Data in these figures scraped from Weather Underground - [KCALOSAN1069 Weather Station](https://www.wunderground.com/dashboard/pws/KCALOSAN1069)
             and from a Hobo sensor placed on the roof of the Pavillion for Japanese Art.
-            ''')
+            ''',style = {'width':'75%', 'margin':'10px auto 0 auto'})
 
     ],style={'display': 'none'})
     ]),
@@ -728,6 +827,12 @@ def update_DGG_timeseries(start_date,end_date,sensors):
                 hoverinfo='skip',
                 showlegend=True
             ))
+        figures[d].update_layout(
+            xaxis=dict(
+                title_text=""
+            ),
+            margin=dict(l=40,r=20,t=5,b=5)
+        )
             
     return figures['Temperature , °C'], figures['RH , %'], figures['Dew Point , °C'], figures['Light , lux']
 
@@ -789,7 +894,8 @@ def update_DGG_timeseries_single(start_date,end_date,sensor):
         title_text="Temperature and Dew Point (°C)",
         color = 'black',
         range = [0,80],
-        secondary_y=False
+        secondary_y=False,
+        automargin=True
     )
 
     # Right y-axis (RH)
@@ -797,13 +903,16 @@ def update_DGG_timeseries_single(start_date,end_date,sensor):
         title_text="Relative Humidity (%)",
         color = 'limegreen',
         range=[0,80],
-        secondary_y=True
+        secondary_y=True,
+        automargin=True
     )
 
     fig.update_layout(
-        #title="Temperature vs. Relative Humidity",
-        
-        hovermode="x unified"   # nice combined hover
+        hovermode="x unified" ,  # nice combined hover
+        xaxis=dict(
+            title_text=""
+        ),
+        margin=dict(l=40,r=20,t=5,b=5)
     )
     
     rh_24_hour_average = dates.merge(moving_24hour_average['RH , %'], how='inner',on='Date-Time (PST/PDT)')
@@ -868,10 +977,15 @@ def update_DGG_timeseries_single(start_date,end_date,sensor):
             showlegend=True
         ))    
     fig2.update_layout(
-        hovermode="x unified"   # nice combined hover
+        hovermode="x unified",   # nice combined hover
+        xaxis=dict(
+            title_text=""
+        ),
+        margin=dict(l=40,r=275,t=5,b=5),
     )
     fig2.update_xaxes(title_text="Date")
-    fig2.update_yaxes(title_text="Relative Humidity (%)")
+    fig2.update_yaxes(title_text="Relative Humidity (%)",
+                      automargin=True)
     return fig, fig2
 
 #%% Updating Figure for Tab 4 - Psychrometric View
@@ -926,9 +1040,10 @@ def update_DGG_psychrometric(sensors, start_date, end_date):
         title='Psychrometric Chart',
         xaxis_title='Dry-bulb Temperature (°C)',
         yaxis_title="Humidity Ratio [g₍H₂O₎/kg₍dry air₎]",
-        xaxis=dict(range=[0, 45]),
-        yaxis=dict(range=[0, 30]),
+        xaxis=dict(range=[0, 45],showline=True, mirror=True, linecolor='black'),
+        yaxis=dict(range=[0, 30],showline=True, mirror=True, linecolor='black'),
         plot_bgcolor='white'
+        
     )
 
     for sensor in sensors:
@@ -1043,9 +1158,10 @@ def update_HVAC_comp(sensor):
     time_post = postHVAC['RH , %']['Date-Time (PST/PDT)'].copy()
     time_post[np.isnan(rh_data_post)]=pd.NaT
     
-    rh_data_wunderground = weather_data['Humidity']/100
-    temp_data_wunderground = weather_data['Temperature']
-    time_wunderground = weather_data['Date-Time']
+    truncated_weather = weather_data.iloc[::15]
+    rh_data_wunderground = truncated_weather['Humidity']/100
+    temp_data_wunderground = truncated_weather['Temperature']
+    time_wunderground = truncated_weather['Date-Time']
 
     figure = go.Figure()
 
@@ -1087,8 +1203,8 @@ def update_HVAC_comp(sensor):
         title='Psychrometric Chart',
         xaxis_title='Dry-bulb Temperature (°C)',
         yaxis_title="Humidity Ratio [g₍H₂O₎/kg₍dry air₎]",
-        xaxis=dict(range=[0, 45]),
-        yaxis=dict(range=[0, 30]),
+        xaxis=dict(range=[0, 45],showline=True, linecolor='black',mirror=True),
+        yaxis=dict(range=[0, 30],showline=True, linecolor='black',mirror=True),
         plot_bgcolor='white'
     )
     
@@ -1226,7 +1342,9 @@ def update_weather_tab(start_date, end_date):
                                yanchor = "bottom",
                                y=1.02,
                                xanchor = "right",
-                               x=1))
+                               x=1),
+                           margin=dict(l=40,r=20,t=5,b=5)
+                           )
     
     figure_solar_radiation = make_subplots(specs=[[{"secondary_y": True}]])
     figure_solar_radiation.add_trace(go.Scatter(
@@ -1257,7 +1375,8 @@ def update_weather_tab(start_date, end_date):
                                yanchor = "bottom",
                                y=1.02,
                                xanchor = "right",
-                               x=1))
+                               x=1),
+                           margin=dict(l=40,r=20,t=5,b=5))
     
     figure_wind_speed = make_subplots(specs=[[{"secondary_y": True}]])
     figure_wind_speed.add_trace(go.Scatter(
@@ -1295,7 +1414,8 @@ def update_weather_tab(start_date, end_date):
                                yanchor = "bottom",
                                y=1.02,
                                xanchor = "right",
-                               x=1))
+                               x=1),
+                           margin=dict(l=40,r=20,t=5,b=5))
 
 
     figure_precipitation = go.Figure()
@@ -1316,7 +1436,8 @@ def update_weather_tab(start_date, end_date):
                                yanchor = "bottom",
                                y=1.02,
                                xanchor = "right",
-                               x=1))    
+                               x=1),
+                           margin=dict(l=40,r=20,t=5,b=5))    
     figure_precipitation.update_yaxes(
         title_text="Precipitation (in.)",
         range=[0,3])
@@ -1329,6 +1450,8 @@ def update_weather_tab(start_date, end_date):
         name = 'Pressure (inHg)'))
     figure_pressure.update_yaxes(
         title_text = 'Pressure (inHg)')
+    figure_pressure.update_layout(hovermode="x unified",
+                           margin=dict(l=40,r=20,t=5,b=5)) 
     
     return figure_T, figure_solar_radiation, figure_wind_speed, figure_precipitation, figure_pressure, 
 #%% Configuring error logging
