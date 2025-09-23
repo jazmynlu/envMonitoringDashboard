@@ -1,0 +1,304 @@
+2025-09-22 14:46:38,445 - ERROR - app_new - Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 413, in get_loc
+    return self._range.index(new_key)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^
+ValueError: 0 is not in range
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\dash.py", line 1494, in dispatch
+    response_data = ctx.run(partial_func)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 688, in add_context
+    raise err
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 679, in add_context
+    output_value = _invoke_callback(func, *func_args, **func_kwargs)  # type: ignore[reportArgumentType]
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 59, in _invoke_callback
+    return func(*args, **kwargs)  # %% callback invoked %%
+  File "c:\users\jlu.lacma\documents\envmonitoring\dashboard\app_new.py", line 188, in update_DGG_dailymap
+    f"<b>Temp:</b> {daily_data.loc[0,sensor]:.2f}°C<br>"
+                    ~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexing.py", line 1183, in __getitem__
+    return self.obj._get_value(*key, takeable=self._takeable)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\frame.py", line 4226, in _get_value
+    row = self.index.get_loc(index)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 415, in get_loc
+    raise KeyError(key) from err
+KeyError: 0
+2025-09-22 16:52:15,756 - ERROR - app_new - Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 413, in get_loc
+    return self._range.index(new_key)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^
+ValueError: 0 is not in range
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\dash.py", line 1494, in dispatch
+    response_data = ctx.run(partial_func)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 688, in add_context
+    raise err
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 679, in add_context
+    output_value = _invoke_callback(func, *func_args, **func_kwargs)  # type: ignore[reportArgumentType]
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 59, in _invoke_callback
+    return func(*args, **kwargs)  # %% callback invoked %%
+  File "c:\users\jlu.lacma\documents\envmonitoring\dashboard\app_new.py", line 205, in update_DGG_dailymap
+    f"<b>Temp:</b> {daily_data.loc[0,sensor]:.2f}°C<br>"
+                    ~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexing.py", line 1183, in __getitem__
+    return self.obj._get_value(*key, takeable=self._takeable)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\frame.py", line 4226, in _get_value
+    row = self.index.get_loc(index)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 415, in get_loc
+    raise KeyError(key) from err
+KeyError: 0
+2025-09-22 16:52:17,212 - ERROR - app_new - Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 413, in get_loc
+    return self._range.index(new_key)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^
+ValueError: 0 is not in range
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\dash.py", line 1494, in dispatch
+    response_data = ctx.run(partial_func)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 688, in add_context
+    raise err
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 679, in add_context
+    output_value = _invoke_callback(func, *func_args, **func_kwargs)  # type: ignore[reportArgumentType]
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 59, in _invoke_callback
+    return func(*args, **kwargs)  # %% callback invoked %%
+  File "c:\users\jlu.lacma\documents\envmonitoring\dashboard\app_new.py", line 205, in update_DGG_dailymap
+    f"<b>Temp:</b> {daily_data.loc[0,sensor]:.2f}°C<br>"
+                    ~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexing.py", line 1183, in __getitem__
+    return self.obj._get_value(*key, takeable=self._takeable)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\frame.py", line 4226, in _get_value
+    row = self.index.get_loc(index)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 415, in get_loc
+    raise KeyError(key) from err
+KeyError: 0
+2025-09-22 16:52:17,946 - ERROR - app_new - Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 413, in get_loc
+    return self._range.index(new_key)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^
+ValueError: 0 is not in range
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\dash.py", line 1494, in dispatch
+    response_data = ctx.run(partial_func)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 688, in add_context
+    raise err
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 679, in add_context
+    output_value = _invoke_callback(func, *func_args, **func_kwargs)  # type: ignore[reportArgumentType]
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 59, in _invoke_callback
+    return func(*args, **kwargs)  # %% callback invoked %%
+  File "c:\users\jlu.lacma\documents\envmonitoring\dashboard\app_new.py", line 205, in update_DGG_dailymap
+    f"<b>Temp:</b> {daily_data.loc[0,sensor]:.2f}°C<br>"
+                    ~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexing.py", line 1183, in __getitem__
+    return self.obj._get_value(*key, takeable=self._takeable)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\frame.py", line 4226, in _get_value
+    row = self.index.get_loc(index)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 415, in get_loc
+    raise KeyError(key) from err
+KeyError: 0
+2025-09-22 16:52:18,671 - ERROR - app_new - Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 413, in get_loc
+    return self._range.index(new_key)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^
+ValueError: 0 is not in range
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\dash.py", line 1494, in dispatch
+    response_data = ctx.run(partial_func)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 688, in add_context
+    raise err
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 679, in add_context
+    output_value = _invoke_callback(func, *func_args, **func_kwargs)  # type: ignore[reportArgumentType]
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 59, in _invoke_callback
+    return func(*args, **kwargs)  # %% callback invoked %%
+  File "c:\users\jlu.lacma\documents\envmonitoring\dashboard\app_new.py", line 205, in update_DGG_dailymap
+    f"<b>Temp:</b> {daily_data.loc[0,sensor]:.2f}°C<br>"
+                    ~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexing.py", line 1183, in __getitem__
+    return self.obj._get_value(*key, takeable=self._takeable)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\frame.py", line 4226, in _get_value
+    row = self.index.get_loc(index)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 415, in get_loc
+    raise KeyError(key) from err
+KeyError: 0
+2025-09-22 17:03:53,552 - ERROR - app_new - Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 413, in get_loc
+    return self._range.index(new_key)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^
+ValueError: 0 is not in range
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\dash.py", line 1494, in dispatch
+    response_data = ctx.run(partial_func)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 688, in add_context
+    raise err
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 679, in add_context
+    output_value = _invoke_callback(func, *func_args, **func_kwargs)  # type: ignore[reportArgumentType]
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 59, in _invoke_callback
+    return func(*args, **kwargs)  # %% callback invoked %%
+  File "c:\users\jlu.lacma\documents\envmonitoring\dashboard\app_new.py", line 205, in update_DGG_dailymap
+    hover_text = [
+    
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexing.py", line 1183, in __getitem__
+    return self.obj._get_value(*key, takeable=self._takeable)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\frame.py", line 4226, in _get_value
+    row = self.index.get_loc(index)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 415, in get_loc
+    raise KeyError(key) from err
+KeyError: 0
+2025-09-22 17:04:13,355 - ERROR - app_new - Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 413, in get_loc
+    return self._range.index(new_key)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^
+ValueError: 0 is not in range
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\dash.py", line 1494, in dispatch
+    response_data = ctx.run(partial_func)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 688, in add_context
+    raise err
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 679, in add_context
+    output_value = _invoke_callback(func, *func_args, **func_kwargs)  # type: ignore[reportArgumentType]
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 59, in _invoke_callback
+    return func(*args, **kwargs)  # %% callback invoked %%
+  File "c:\users\jlu.lacma\documents\envmonitoring\dashboard\app_new.py", line 205, in update_DGG_dailymap
+    hover_text = [
+    
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexing.py", line 1183, in __getitem__
+    return self.obj._get_value(*key, takeable=self._takeable)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\frame.py", line 4226, in _get_value
+    row = self.index.get_loc(index)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 415, in get_loc
+    raise KeyError(key) from err
+KeyError: 0
+2025-09-22 17:04:19,425 - ERROR - app_new - Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 413, in get_loc
+    return self._range.index(new_key)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^
+ValueError: 0 is not in range
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\dash.py", line 1494, in dispatch
+    response_data = ctx.run(partial_func)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 688, in add_context
+    raise err
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 679, in add_context
+    output_value = _invoke_callback(func, *func_args, **func_kwargs)  # type: ignore[reportArgumentType]
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 59, in _invoke_callback
+    return func(*args, **kwargs)  # %% callback invoked %%
+  File "c:\users\jlu.lacma\documents\envmonitoring\dashboard\app_new.py", line 205, in update_DGG_dailymap
+    hover_text = [
+    
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexing.py", line 1183, in __getitem__
+    return self.obj._get_value(*key, takeable=self._takeable)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\frame.py", line 4226, in _get_value
+    row = self.index.get_loc(index)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 415, in get_loc
+    raise KeyError(key) from err
+KeyError: 0

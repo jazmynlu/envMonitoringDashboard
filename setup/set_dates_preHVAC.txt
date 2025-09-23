@@ -1,0 +1,6 @@
+fmin_date_allowed=date(2025, 1, 8)
+fmax_date_allowed=date(2025, 6, 10)
+fdate = date(2025,3,26)
+finitial_visible_month=date(2025, 3,26)
+fstart_date=date(2025, 3, 26)
+fend_date=date(2025, 4, 1)

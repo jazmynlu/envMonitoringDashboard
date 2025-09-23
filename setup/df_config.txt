@@ -1,0 +1,15 @@
+# Data between Jan 1 and June, before HVAC system was turned on. Very messy and difficult to interpret, but accessible if needed
+preHVAC = 'Data/preHVACdata.pkl'
+
+# Data after July 30th deployment, and some processing
+postHVAC = 'Data/postHVACdata_09152025.pkl'
+moving_24hour_average = 'Data/moving_24hour_average_09152025.pkl'
+moving_24hour_range = 'Data/moving_24hour_range_09152025.pkl'
+moving_7day_average = 'Data/moving_7day_average_09152025.pkl'
+moving_7day_range = 'Data/moving_7day_range_09152025.pkl'
+
+#Weather station data scraped from wunderground.com
+weather_data = 'Data/wunderground_09152025.pkl'
+
+# DGG map coordinates of sensors
+circle_coords = 'galleryInfo/DGG_coords.pkl'

@@ -1,0 +1,116 @@
+import pickle
+from datetime import date
+import psychrolib
+import numpy as np
+from PIL import Image
+import base64
+import io
+
+def load_dataframes(filepath = 'setup/df_config.txt'):
+    dataframes = {}
+    with open(filepath, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            name,value = line.split('=',1)
+            name=name.strip()
+            value=value.strip().strip("'").strip('"')
+            with open(value,'rb') as file:
+                dataframes[name]=pickle.load(file)
+    return dataframes
+    
+def load_initial_dashboard_vars(filepath = 'setup/set_dates.txt'):
+    safe_env = {'date': date}
+    date_config = {}
+    with open(filepath, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            name,value = line.split('=',1)
+            date_config[name.strip()] = eval(value.strip(), safe_env)
+    return date_config
+
+def crop_map(image_path='galleryInfo/2025 - DGG Exhibition Level Blueprint (LACMA).jpg'):
+    # Load Image of Map
+    Image.MAX_IMAGE_PIXELS = None
+    img = Image.open(image_path)
+    
+    # Crop the image
+    crop_box = (3000, 1000, 14000, 7500)
+    cropped_img = img.crop(crop_box)
+    # Resize image to smaller width while keeping aspect ratio
+    target_width = 2000
+    target_height = int(target_width * cropped_img.height / cropped_img.width)
+    resized_img = cropped_img.resize((target_width, target_height), Image.Resampling.LANCZOS)
+
+    # Convert numpy image to base64 string for Plotly
+    buffered = io.BytesIO()
+    resized_img.save(buffered, format="PNG")
+    img_str = "data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode()
+    return img_str, cropped_img
+
+def initialize_dashboard(df_filepath = 'setup/df_config.txt', 
+                         setdates_filepath = 'setup/set_dates.txt',
+                         image_path='galleryInfo/2025 - DGG Exhibition Level Blueprint (LACMA).jpg'):
+    dfs = load_dataframes(df_filepath)
+    date_config = load_initial_dashboard_vars(setdates_filepath)
+    img_str, cropped_img = crop_map(image_path)
+    max_temp = dfs['postHVAC']['Temperature , °C'].iloc[:,1:].max().max()
+    min_temp = dfs['postHVAC']['Temperature , °C'].iloc[:,1:].min().min()
+    max_RH = dfs['postHVAC']['RH , %'].iloc[:,1:].max().max()
+    min_RH = dfs['postHVAC']['RH , %'].iloc[:,1:].min().min()
+    max_dp = dfs['postHVAC']['Dew Point , °C'].iloc[:,1:].max().max()
+    min_dp = dfs['postHVAC']['Dew Point , °C'].iloc[:,1:].min().min() 
+    max_lt = dfs['postHVAC']['Light , lux'].iloc[:,1:].max().max()
+    min_lt = dfs['postHVAC']['Light , lux'].iloc[:,1:].min().min()
+
+    # Prepare data for Map plotting
+    x_vals = []
+    y_vals = []
+    
+    for i in dfs['circle_coords'].keys():
+        x_vals.append(dfs['circle_coords'][i][0])
+        y_vals.append(dfs['circle_coords'][i][1])
+
+    # Prepare data for psychrometric calculations
+    psychrolib.SetUnitSystem(psychrolib.SI)
+    pressure = 101325
+
+    t_array = np.arange(4, 45, 0.1)
+    rh_array = np.arange(0, 1.1, 0.1)
+
+    labels = {
+        0.0: (37, 0.5, '0% RH'),
+        0.2: (37, 8, '20% RH'),
+        0.4: (37, 17, '40% RH'),
+        0.6: (35, 23, '60% RH'),
+        0.8: (33, 27, '80% RH'),
+        1.0: (30, 28.5, '100% RH')
+    }
+
+    t_shade = np.arange(16, 25.1, 0.1)
+    hr_40 = [psychrolib.GetHumRatioFromRelHum(t, 0.4, pressure) * 1000 for t in t_shade]
+    hr_60 = [psychrolib.GetHumRatioFromRelHum(t, 0.6, pressure) * 1000 for t in t_shade]
+
+
+    return dfs, date_config, img_str, cropped_img, {
+        'max_temp': max_temp,
+        'min_temp': min_temp,
+        'max_RH': max_RH,
+        'min_RH': min_RH,
+        'max_dp': max_dp,
+        'min_dp': min_dp,
+        'max_lt': max_lt,
+        'min_lt': min_lt,
+        'x_vals': x_vals,
+        'y_vals': y_vals,
+        't_array': t_array,
+        'rh_array': rh_array,
+        'pressure': pressure,
+        'labels': labels,
+        't_shade': t_shade,
+        'hr_40': hr_40,
+        'hr_60': hr_60
+    }    
