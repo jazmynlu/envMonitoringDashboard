@@ -302,3 +302,193 @@ Traceback (most recent call last):
   File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\pandas\core\indexes\range.py", line 415, in get_loc
     raise KeyError(key) from err
 KeyError: 0
+2025-09-22 17:21:26,660 - ERROR - app_new - Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\dash.py", line 1494, in dispatch
+    response_data = ctx.run(partial_func)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 688, in add_context
+    raise err
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 679, in add_context
+    output_value = _invoke_callback(func, *func_args, **func_kwargs)  # type: ignore[reportArgumentType]
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 59, in _invoke_callback
+    return func(*args, **kwargs)  # %% callback invoked %%
+  File "c:\users\jlu.lacma\documents\envmonitoring\dashboard\app_new.py", line 471, in update_DGG_timeseries_single
+    fig3.update_title(title_text = value)
+    ^^^^^^^^^^^^^^^^^
+AttributeError: 'Figure' object has no attribute 'update_title'. Did you mean: 'update_smiths'?
+2025-09-22 17:24:52,696 - ERROR - app_new - Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\dash.py", line 1494, in dispatch
+    response_data = ctx.run(partial_func)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 690, in add_context
+    _prepare_response(
+    ~~~~~~~~~~~~~~~~~^
+        output_value,
+        ^^^^^^^^^^^^^
+    ...<11 lines>...
+        allow_dynamic_callbacks,
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_callback.py", line 531, in _prepare_response
+    flat_output_values = flatten_grouping(output_value, output)
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_grouping.py", line 43, in flatten_grouping
+    validate_grouping(grouping, schema)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_grouping.py", line 224, in validate_grouping
+    SchemaLengthValidationError.check(grouping, full_schema, path, len(schema))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jlu.LACMA\AppData\Local\anaconda3\envs\dashboardenv\Lib\site-packages\dash\_grouping.py", line 193, in check
+    raise SchemaLengthValidationError(value, full_schema, path, expected_len)
+dash._grouping.SchemaLengthValidationError: Schema: [<Output `DGG_timeseries_single.figure`>, <Output `DGG_rh_range.figure`>, <Output `DGG_light_plt.figure`>]
+                Path: ()
+                Expected length: 3
+                Received value of length 4:
+                    [Figure({
+    'data': [{'line': {'color': 'firebrick'},
+              'name': 'Air Temperature (°C)',
+              'type': 'scatter',
+              'x': array(['2025-08-18T00:15:00.000000000', '2025-08-18T00:30:00.000000000',
+                          '2025-08-18T00:45:00.000000000', ..., '2025-08-23T23:15:00.000000000',
+                          '2025-08-23T23:30:00.000000000', '2025-08-23T23:45:00.000000000'],
+                         shape=(575,), dtype='datetime64[ns]'),
+              'xaxis': 'x',
+              'y': {'bdata': ('gCycddjHNEAAJr+gjsU0QJA5VRQIxD' ... 'qTITZAYFW+OpMhNkDAJHXvnCk2QA=='),
+                    'dtype': 'f8'},
+              'yaxis': 'y'},
+             {'line': {'color': 'steelblue'},
+              'name': 'Dew Point (°C)',
+              'type': 'scatter',
+              'x': array(['2025-08-18T00:15:00.000000000', '2025-08-18T00:30:00.000000000',
+                          '2025-08-18T00:45:00.000000000', ..., '2025-08-23T23:15:00.000000000',
+                          '2025-08-23T23:30:00.000000000', '2025-08-23T23:45:00.000000000'],
+                         shape=(575,), dtype='datetime64[ns]'),
+              'xaxis': 'x',
+              'y': {'bdata': ('75lWnQJyJ0BtVBQBE3QnQJulpGl8bi' ... 'XKmSlA8ShuLWKRKUD3Lkx4xLkpQA=='),
+                    'dtype': 'f8'},
+              'yaxis': 'y'},
+             {'line': {'color': 'limegreen'},
+              'name': 'Relative Humidity (%)',
+              'type': 'scatter',
+              'x': array(['2025-08-18T00:15:00.000000000', '2025-08-18T00:30:00.000000000',
+                          '2025-08-18T00:45:00.000000000', ..., '2025-08-23T23:15:00.000000000',
+                          '2025-08-23T23:30:00.000000000', '2025-08-23T23:45:00.000000000'],
+                         shape=(575,), dtype='datetime64[ns]'),
+              'xaxis': 'x',
+              'y': {'bdata': ('AAAAAIoJTEAAAAAAZg9MQAAAAADcDE' ... 'D4tEtAAAAAAFqtS0AAAAAAZsRLQA=='),
+                    'dtype': 'f8'},
+              'yaxis': 'y2'}],
+    'layout': {'hovermode': 'x unified',
+               'margin': {'b': 5, 'l': 40, 'r': 20, 't': 5},
+               'template': '...',
+               'xaxis': {'anchor': 'y', 'domain': [0.0, 0.94], 'title': {'text': ''}},
+               'yaxis': {'anchor': 'x',
+                         'automargin': True,
+                         'color': 'black',
+                         'domain': [0.0, 1.0],
+                         'range': [0, 80],
+                         'title': {'text': 'Temperature and Dew Point (°C)'}},
+               'yaxis2': {'anchor': 'x',
+                          'automargin': True,
+                          'color': 'limegreen',
+                          'overlaying': 'y',
+                          'range': [0, 80],
+                          'side': 'right',
+                          'title': {'text': 'Relative Humidity (%)'}}}
+}), Figure({
+    'data': [{'line': {'color': 'grey'},
+              'mode': 'lines',
+              'name': 'RH , %',
+              'type': 'scatter',
+              'x': array(['2025-08-18T00:15:00.000000000', '2025-08-18T00:30:00.000000000',
+                          '2025-08-18T00:45:00.000000000', ..., '2025-08-23T23:15:00.000000000',
+                          '2025-08-23T23:30:00.000000000', '2025-08-23T23:45:00.000000000'],
+                         shape=(575,), dtype='datetime64[ns]'),
+              'y': {'bdata': ('AAAAAIoJTEAAAAAAZg9MQAAAAADcDE' ... 'D4tEtAAAAAAFqtS0AAAAAAZsRLQA=='),
+                    'dtype': 'f8'}},
+             {'line': {'color': 'purple', 'dash': 'dash'},
+              'name': '24 hr average',
+              'type': 'scatter',
+              'x': array(['2025-08-18T00:15:00.000000000', '2025-08-18T00:30:00.000000000',
+                          '2025-08-18T00:45:00.000000000', ..., '2025-08-23T23:15:00.000000000',
+                          '2025-08-23T23:30:00.000000000', '2025-08-23T23:45:00.000000000'],
+                         shape=(575,), dtype='datetime64[ns]'),
+              'y': {'bdata': ('AAAAYJe1S0BVVVXl4rVLQFVVVaVAtk' ... 'op7UtAq6qqut/rS0AAAAAAx+pLQA=='),
+                    'dtype': 'f8'}},
+             {'line': {'color': 'black'},
+              'name': '24 hr range',
+              'type': 'scatter',
+              'x': array(['2025-08-18T00:15:00.000000000', '2025-08-18T00:30:00.000000000',
+                          '2025-08-18T00:45:00.000000000', ..., '2025-08-23T23:15:00.000000000',
+                          '2025-08-23T23:30:00.000000000', '2025-08-23T23:45:00.000000000'],
+                         shape=(575,), dtype='datetime64[ns]'),
+              'y': {'bdata': ('AAAAAMDs9j8AAAAAwOz2PwAAAADA7P' ... 'DgMwRAAAAAAOAzBEAAAAAA4DMEQA=='),
+                    'dtype': 'f8'}},
+             {'fill': 'toself',
+              'fillcolor': 'skyblue',
+              'hoverinfo': 'skip',
+              'line': {'color': 'skyblue'},
+              'name': 'Bizot Standard',
+              'opacity': 0.3,
+              'showlegend': True,
+              'type': 'scatter',
+              'x': array(['2025-08-18T00:15:00.000000000', '2025-08-18T00:30:00.000000000',
+                          '2025-08-18T00:45:00.000000000', ..., '2025-08-18T00:45:00.000000000',
+                          '2025-08-18T00:30:00.000000000', '2025-08-18T00:15:00.000000000'],
+                         shape=(1150,), dtype='datetime64[ns]'),
+              'y': {'bdata': ('KCgoKCgoKCgoKCgoKCgoKCgoKCgoKC' ... 'w8PDw8PDw8PDw8PDw8PDw8PDw8PA=='),
+                    'dtype': 'i1'}},
+             {'fill': 'toself',
+              'fillcolor': 'skyblue',
+              'hoverinfo': 'skip',
+              'line': {'color': 'skyblue'},
+              'name': 'Daily Fluctuation Range',
+              'opacity': 0.3,
+              'showlegend': True,
+              'type': 'scatter',
+              'x': array(['2025-08-18T00:15:00.000000000', '2025-08-18T00:30:00.000000000',
+                          '2025-08-18T00:45:00.000000000', ..., '2025-08-18T00:45:00.000000000',
+                          '2025-08-18T00:30:00.000000000', '2025-08-18T00:15:00.000000000'],
+                         shape=(1150,), dtype='datetime64[ns]'),
+              'y': {'bdata': ('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' ... 'oKCgoKCgoKCgoKCgoKCgoKCgoKCg=='),
+                    'dtype': 'i1'}}],
+    'layout': {'hovermode': 'x unified',
+               'margin': {'b': 5, 'l': 40, 'r': 275, 't': 5},
+               'template': '...',
+               'xaxis': {'title': {'text': 'Date'}},
+               'yaxis': {'automargin': True, 'title': {'text': 'Relative Humidity (%)'}}}
+}), 'Cumulative Light Exposure between 2025-08-18 and 2025-08-24 is 5273.53 lux-hours', Figure({
+    'data': [{'line': {'color': 'orange'},
+              'mode': 'lines',
+              'name': 'Light , lux',
+              'type': 'scatter',
+              'x': array(['2025-08-18T00:15:00.000000000', '2025-08-18T00:30:00.000000000',
+                          '2025-08-18T00:45:00.000000000', ..., '2025-08-23T23:15:00.000000000',
+                          '2025-08-23T23:30:00.000000000', '2025-08-23T23:45:00.000000000'],
+                         shape=(575,), dtype='datetime64[ns]'),
+              'y': {'bdata': ('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' ... 'AAAAAAAAAAAAAAAAAAAAAAAAAAAA=='),
+                    'dtype': 'f8'}}],
+    'layout': {'template': '...',
+               'title': {'text': 'Cumulative Light Exposure between 2025-08-18 and 2025-08-24 is 5273.53 lux-hours',
+                         'xanchor': 'center'},
+               'xaxis': {'title': {'text': 'Date'}},
+               'yaxis': {'automargin': True, 'title': {'text': 'Light (lux)'}}}
+})]

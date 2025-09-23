@@ -197,8 +197,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                 html.Div(children=[            
                     dcc.Graph(id='DGG_timeseries_single', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
                     dcc.Graph(id='DGG_rh_range',figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
-                    dcc.Markdown(id="cumlight",children=''),
-                    dcc.Graph(id='DGG_light_plt',figure={})],
+                    dcc.Graph(id='DGG_light_plt',figure={}, style={'width':'100%', 'aspect-ratio':'10/3'})],
                     style={
                         'display':'flex',
                         'flexDirection':'column',

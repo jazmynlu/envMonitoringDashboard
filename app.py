@@ -15,7 +15,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 #%% Adding Logger
-app_new = Dash(__name__)
+app = Dash(__name__)
 logger = logging.getLogger(__name__)
 
 console_handler = logging.StreamHandler()
@@ -39,10 +39,10 @@ dfs, date_config, img_str, cropped_img, init_param = initialize_dashboard(df_fil
 
 dtypes = dfs['postHVAC'] #change this if want to look at preHVAC data, but most likely irrelevant
 
-app_new.layout = get_layout(date_config, img_str, cropped_img, dfs['circle_coords'], init_param['x_vals'], init_param['y_vals'])
+app.layout = get_layout(date_config, img_str, cropped_img, dfs['circle_coords'], init_param['x_vals'], init_param['y_vals'])
 
 #%% Updates Tabs
-@app_new.callback(
+@app.callback(
     [Output('tab-map-view-content', 'style'),
      Output('tab-map-daily-view-content', 'style'),
      Output('tab-time-series-content', 'style'),
@@ -65,7 +65,7 @@ def display_tab_content(tab):
         {'display': 'block'} if tab == 'tab-weather' else {'display': 'none'}
     ]
 #%% Updating Figure for Tab 1 - Daily DGG Map View
-@app_new.callback(
+@app.callback(
     Output(component_id='DGG_map', component_property='figure'),
     Input(component_id='slct_dtype_tab-map-view-content', component_property='value'),
     Input(component_id='date_range_tab-map-view-content', component_property='start_date'),
@@ -177,7 +177,7 @@ def update_DGG_map(value, start_date,end_date,base_fig_json):
 
 
 #%% Updating Figure for Tab 2 - DGG Map View
-@app_new.callback(
+@app.callback(
     Output(component_id='DGG_map_tab-map-daily-view', component_property='figure'),
     Input(component_id='date_tab-map-daily-view', component_property = 'date'),
     Input(component_id='slct_dtype_tab-map-daily-view', component_property = 'value'),
@@ -244,7 +244,7 @@ def update_DGG_dailymap(date,value,time,base_fig_json):
     return figure
 
 #%% Updating Figure for Tab 3 - Timeseries
-@app_new.callback(
+@app.callback(
     [Output(component_id='DGG_timeseries_temp', component_property='figure'),
     Output(component_id='DGG_timeseries_rh', component_property='figure'),
     Output(component_id='DGG_timeseries_dp', component_property='figure'),
@@ -302,10 +302,9 @@ def update_DGG_timeseries(start_date,end_date,sensors):
     return figures['Temperature , °C'], figures['RH , %'], figures['Dew Point , °C'], figures['Light , lux']
 
 #%% Updating Figure for Tab 4 (Time Series Single)
-@app_new.callback(
+@app.callback(
      [Output(component_id='DGG_timeseries_single', component_property='figure'),
-      Output(component_id='DGG_rh_range', component_property='figure'),
-      Output(component_id='cumlight',component_property='children'),      
+      Output(component_id='DGG_rh_range', component_property='figure'),      
       Output(component_id='DGG_light_plt',component_property='figure'),],
      [Input(component_id='date_range_tab-ts-single', component_property='start_date'),
      Input(component_id='date_range_tab-ts-single', component_property='end_date'),
@@ -313,10 +312,7 @@ def update_DGG_timeseries(start_date,end_date,sensors):
 )
 def update_DGG_timeseries_single(start_date,end_date,sensor):
     dates = pd.DataFrame(dtypes['RH , %']['Date-Time (PST/PDT)'])
-    try:
-        dates = dates[(dates['Date-Time (PST/PDT)']<np.datetime64(end_date))&(dates['Date-Time (PST/PDT)']>np.datetime64(start_date))]
-    except ValueError:
-        logging.error("Date and time selected is not in range", exc_info=True)
+    dates = dates[(dates['Date-Time (PST/PDT)']<np.datetime64(end_date))&(dates['Date-Time (PST/PDT)']>np.datetime64(start_date))]
 
     single_df = dates.copy()
     for d in ['Temperature , °C', 'RH , %', 'Dew Point , °C', 'Light , lux']:
@@ -468,10 +464,14 @@ def update_DGG_timeseries_single(start_date,end_date,sensor):
         mode='lines',
         line=dict(color='orange')
     ))
-    return fig, fig2, value, fig3
+    fig3.update_xaxes(title_text="Date")
+    fig3.update_yaxes(title_text="Light (lux)",
+                      automargin=True)
+    fig3.update_layout(title = dict(text=value, x=0.5, xanchor = 'center'))
+    return fig, fig2, fig3
 
 #%% Updating Figure for Tab 5 - Psychrometric View
-@app_new.callback(
+@app.callback(
     Output(component_id='DGG_psycrhometric', component_property='figure'),
     [Input(component_id='sensor_select_tab-psychrometric', component_property='value'),
      Input(component_id='date_range_tab-psychrometric', component_property='start_date'),
@@ -545,7 +545,7 @@ def update_DGG_psychrometric(sensors, start_date, end_date):
     return figure
 
 #%% Updating Figure for Tab 5 - Curtain Tab
-# @app_new.callback(
+# @app.callback(
 #     [Output(component_id='DGG_map_curtain', component_property='figure'),
 #      Output(component_id = 'DGG_timeseries_curtain', component_property= 'figure')],
 #     [Input(component_id ='curtain_boolean', component_property = 'on'),
@@ -624,7 +624,7 @@ def update_DGG_psychrometric(sensors, start_date, end_date):
 #     return figure_map, figure_ts
 
 #%% Updating Figure for Tab 6 - HVAC Psychrometric Comp
-@app_new.callback(
+@app.callback(
     Output(component_id='HVAC_comp', component_property='figure'),
     Input(component_id='sensor_select_tab-hvac', component_property='value')
 )
@@ -761,7 +761,7 @@ def update_HVAC_comp(sensor):
     return figure
 
 #%% Updating Figure for Tab 7 - Outside Weather
-@app_new.callback(
+@app.callback(
     [Output(component_id='T_DP_RH', component_property='figure'),
      Output(component_id='solar_radiation', component_property='figure'),
      Output(component_id='wind_speed', component_property='figure'),
@@ -939,4 +939,4 @@ def update_weather_tab(start_date, end_date):
 
 #%%
 if __name__ == '__main__':
-    app_new.run(debug=False,use_reloader=True, port=7080)
+    app.run(debug=True,use_reloader=True, port=7080)
