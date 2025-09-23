@@ -37,8 +37,6 @@ dfs, date_config, img_str, cropped_img, init_param = initialize_dashboard(df_fil
                          setdates_filepath = 'setup/set_dates.txt',
                          image_path='galleryInfo/2025 - DGG Exhibition Level Blueprint (LACMA).jpg')
 
-dtypes = dfs['postHVAC'] #change this if want to look at preHVAC data, but most likely irrelevant
-
 app.layout = get_layout(date_config, img_str, cropped_img, dfs['circle_coords'], init_param['x_vals'], init_param['y_vals'])
 
 #%% Updates Tabs
@@ -77,11 +75,11 @@ def update_DGG_map(value, start_date,end_date,base_fig_json):
     end_date = pd.to_datetime(end_date)
 
     if 'Temperature' in value:
-        dff = dtypes['Temperature , °C'].copy()
+        dff = dfs['postHVAC_pruned']['Temperature , °C'].copy()
     elif 'Relative Humidity' in value:
-        dff = dtypes['RH , %'].copy()
+        dff = dfs['postHVAC_pruned']['RH , %'].copy()
     elif 'Light' in value:
-        dff = dtypes['Light , lux'].copy()
+        dff = dfs['postHVAC_pruned']['Light , lux'].copy()
     dff = dff[(dff['Date-Time (PST/PDT)']<end_date)&(dff['Date-Time (PST/PDT)']>start_date)]
     dff['Date'] = dff['Date-Time (PST/PDT)'].dt.date
     all_dates = dff['Date'].unique()
@@ -188,7 +186,7 @@ def update_DGG_dailymap(date,value,time,base_fig_json):
     datetime_base = datetime.combine(pd.to_datetime(date),datetime.min.time()) #convert datetime at midnight
     target_time = pd.to_datetime(datetime_base+timedelta(minutes = time))
     
-    dff = dtypes[value].copy()
+    dff = dfs['postHVAC_pruned'][value].copy()
     try:
         daily_data = dff[dff['Date-Time (PST/PDT)']==target_time].drop(['Date-Time (PST/PDT)'],axis=1).reset_index(drop=True)
     except ValueError:
@@ -251,10 +249,15 @@ def update_DGG_dailymap(date,value,time,base_fig_json):
     Output(component_id='DGG_timeseries_light', component_property='figure')],
      [Input(component_id='date_range_tab-timeseries', component_property='start_date'),
      Input(component_id='date_range_tab-timeseries', component_property='end_date'),
-     Input(component_id='sensor_select_tab-timeseries', component_property='value')]
+     Input(component_id='sensor_select_tab-timeseries', component_property='value'),
+     Input(component_id='sensor_movement-timeseries', component_property='on')]
 )
-def update_DGG_timeseries(start_date,end_date,sensors):
+def update_DGG_timeseries(start_date,end_date,sensors, switch):
     figures = {}
+    if switch:
+        dtypes = dfs['postHVAC_pruned']
+    else:
+        dtypes = dfs['postHVAC']
     for d in dtypes.keys():
         dff = dtypes[d].copy()
         dff = dff[(dff['Date-Time (PST/PDT)']<end_date)&(dff['Date-Time (PST/PDT)']>start_date)]
@@ -308,9 +311,15 @@ def update_DGG_timeseries(start_date,end_date,sensors):
       Output(component_id='DGG_light_plt',component_property='figure'),],
      [Input(component_id='date_range_tab-ts-single', component_property='start_date'),
      Input(component_id='date_range_tab-ts-single', component_property='end_date'),
-     Input(component_id='sensor_select_tab-ts-single', component_property='value')]
+     Input(component_id='sensor_select_tab-ts-single', component_property='value'),
+     Input(component_id='sensor_movement-ts-single', component_property='on')]
 )
-def update_DGG_timeseries_single(start_date,end_date,sensor):
+def update_DGG_timeseries_single(start_date,end_date,sensor, switch):
+    if switch:
+        dtypes = dfs['postHVAC_pruned']
+    else:
+        dtypes = dfs['postHVAC']
+        
     dates = pd.DataFrame(dtypes['RH , %']['Date-Time (PST/PDT)'])
     dates = dates[(dates['Date-Time (PST/PDT)']<np.datetime64(end_date))&(dates['Date-Time (PST/PDT)']>np.datetime64(start_date))]
 
@@ -481,8 +490,8 @@ def update_DGG_psychrometric(sensors, start_date, end_date):
     start_date = pd.to_datetime(start_date)
     end_date = pd.to_datetime(end_date)
 
-    rh_data = dtypes['RH , %'].copy()
-    temp_data = dtypes['Temperature , °C'].copy()
+    rh_data = dfs['postHVAC']['RH , %'].copy()
+    temp_data = dfs['postHVAC']['Temperature , °C'].copy()
     rh_data = rh_data[(rh_data['Date-Time (PST/PDT)'] < end_date) & (rh_data['Date-Time (PST/PDT)'] > start_date)]
     temp_data = temp_data[(temp_data['Date-Time (PST/PDT)'] < end_date) & (temp_data['Date-Time (PST/PDT)'] > start_date)]
 

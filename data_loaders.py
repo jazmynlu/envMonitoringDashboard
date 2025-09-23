@@ -3,8 +3,15 @@ from datetime import date
 import psychrolib
 import numpy as np
 from PIL import Image
+import pandas as pd
 import base64
 import io
+
+def load_sensor_movement(filepath = 'setup/sensor_movement.csv'):
+    sensor_movement_df= pd.read_csv(filepath)
+    sensor_movement_df['Start'] = pd.to_datetime(sensor_movement_df['Start'], format="%m/%d/%y %H:%M")
+    sensor_movement_df['End'] = pd.to_datetime(sensor_movement_df['End'], format="%m/%d/%y %H:%M")
+    return sensor_movement_df
 
 def load_dataframes(filepath = 'setup/df_config.txt'):
     dataframes = {}
@@ -18,6 +25,21 @@ def load_dataframes(filepath = 'setup/df_config.txt'):
             value=value.strip().strip("'").strip('"')
             with open(value,'rb') as file:
                 dataframes[name]=pickle.load(file)
+    sensor_mvmt = load_sensor_movement(filepath = 'setup/sensor_movement.csv')
+    dataframes['sensor_movement'] = sensor_mvmt
+    
+    postHVAC_pruned = {}
+    for key in dataframes['postHVAC'].keys():
+        df_pruned = dataframes['postHVAC'][key].copy()
+        for _, row in sensor_mvmt.iterrows():
+            sensor = row['Sensor']
+            start = row['Start']
+            end = row['End']
+            mask = (df_pruned['Date-Time (PST/PDT)'] >= start) & (df_pruned['Date-Time (PST/PDT)'] <= end)
+            df_pruned.loc[mask,sensor]=pd.NA
+        postHVAC_pruned[key]=df_pruned
+    dataframes['postHVAC_pruned'] = postHVAC_pruned
+    
     return dataframes
     
 def load_initial_dashboard_vars(filepath = 'setup/set_dates.txt'):

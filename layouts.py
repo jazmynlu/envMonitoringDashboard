@@ -1,5 +1,6 @@
 from dash import html, dcc
 from create_base_fig import create_base_fig
+import dash_daq as daq
 
 def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals):
     return html.Div([
@@ -7,7 +8,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
             className="app-header",
             children=[
                 html.Img(src='assets/lacma-logo.png', className="app-header--logo"),
-                html.Div('David Geffen Gallery HOBO Environmental Monitoring Dashboard', className='app-header--title')],
+                html.Div('David Geffen Gallery Environmental Monitoring Dashboard', className='app-header--title')],
             style={'display':'flex','alignItems':'center'}
         ),
         #Display tabs
@@ -135,19 +136,24 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         ['30 S'],
                         id='sensor_select_tab-timeseries',
                         multi=True,
-                        style={'width': "70%",
-                               'height':'45px',     
+                        style={'flex':'1',
+                               'height':'80px',     
                                 'color':'darkblue',
                                 'fontSize': '18px', 
                                 'fontFamily':'Verdana',
-                                'fontWeight':'bold'})],
+                                'fontWeight':'bold'}),
+                    daq.BooleanSwitch(id='sensor_movement-timeseries',
+                                  on=True,
+                                  label = 'Hide Sensor Movement Data',
+                                  labelPosition='top',
+                                  style={'marginLeft': '20px'})],
                     style={'display':'flex', 
                            'flexDirection':'row',
-                           'justifyContent':'space-between',
-                           'alignItems':'left',
+                           'justifyContent':'flex-start',
+                           'alignItems':'center',
                            'gap':'20px', 
                            'margin':'20px auto 0 auto', 
-                           'width':'75%'} ),   
+                           'width':'75%'}),   
                 html.Div(
                     children=[
                         dcc.Graph(id='DGG_timeseries_temp', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
@@ -185,14 +191,18 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                                 'color':'darkblue',
                                 'fontSize': '18px',
                                 'fontFamily':'Verdana',
-                                'fontWeight':'bold'})],
+                                'fontWeight':'bold'}),
+                    daq.BooleanSwitch(id='sensor_movement-ts-single',
+                                  on=True,
+                                  label = 'Hide Sensor Movement Data',
+                                  labelPosition='top')],
                     style={'display':'flex', 
                            'flexDirection':'row',
-                           'justifyContent':'space-between',
-                           'alignItems':'left',
+                           'justifyContent':'flex-start',
+                           'alignItems':'center',
                            'gap':'20px', 
                            'margin':'20px auto 0 auto', 
-                           'width':'75%'}  
+                           'width':'75%'} 
                     ),
                 html.Div(children=[            
                     dcc.Graph(id='DGG_timeseries_single', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
@@ -225,7 +235,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         ['30 S'],
                         id='sensor_select_tab-psychrometric',
                         multi=True,
-                        style={'width': "70%",
+                        style={'flex':'1',
                                'height':'45px',     
                                 'color':'darkblue',
                                 'fontSize': '18px', 
@@ -383,8 +393,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                     }),
                 dcc.Markdown('''
                 ### Weather Data
-                Data in these figures scraped from Weather Underground - [KCALOSAN1069 Weather Station](https://www.wunderground.com/dashboard/pws/KCALOSAN1069)
-                and from a Hobo sensor placed on the roof of the Pavillion for Japanese Art.
+                Data in these figures scraped from Weather Underground - [KCALOSAN1069 Weather Station](https://www.wunderground.com/dashboard/pws/KCALOSAN1069).
                 ''',style = {'width':'75%', 'margin':'10px auto 0 auto'})
     
         ],style={'display': 'none'})
