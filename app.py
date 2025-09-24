@@ -16,6 +16,7 @@ from logging.handlers import RotatingFileHandler
 
 #%% Adding Logger
 app = Dash(__name__)
+application = app.server
 logger = logging.getLogger(__name__)
 
 console_handler = logging.StreamHandler()
@@ -241,6 +242,77 @@ def update_DGG_dailymap(date,value,time,base_fig_json):
     figure.data[0].hovertemplate = "%{text}<extra></extra>"
     return figure
 
+#%% Connects DGG Map in first two tabs to time series selection in tab 3
+@app.callback(
+    Output(component_id = 'sensor_select_tab-timeseries', component_property='value'),
+    Input(component_id = 'DGG_map', component_property='selectedData'),
+    Input(component_id = 'DGG_map_tab-map-daily-view', component_property = 'selectedData'))
+def select_sensors_on_map_ts(selected_map1, selected_map2):
+    if not selected_map1 and not selected_map2:
+        return ['30 S']
+    if not selected_map1:
+        selected_map1 = {"points":[]}
+    if not selected_map2:
+        selected_map2 = {"points":[]}
+    if len(selected_map1) > len(selected_map2):
+        return [pt["customdata"][0] for pt in selected_map1["points"]]
+    else:
+        return [pt["customdata"][0] for pt in selected_map2["points"]]
+    
+    
+#%% Connects DGG Map in first two tabs to time series selection in tab 4
+@app.callback(
+    Output(component_id = 'sensor_select_tab-ts-single', component_property='value'),
+    Input(component_id = 'DGG_map', component_property='selectedData'),
+    Input(component_id = 'DGG_map_tab-map-daily-view', component_property = 'selectedData'))
+def select_sensors_on_map_ts_single(selected_map1, selected_map2):
+    if not selected_map1 or "points" not in selected_map1:
+        selected_map1 = {"points": []}
+    if not selected_map2 or "points" not in selected_map2:
+        selected_map2 = {"points": []}
+    if not selected_map1["points"] and not selected_map2["points"]:
+        return "30 S"
+    if selected_map1["points"] and not selected_map2["points"]:
+        return selected_map1["points"][0]["customdata"][0]
+    if selected_map2["points"] and not selected_map1["points"]:
+        return selected_map2["points"][0]["customdata"][0]
+    if selected_map1["points"] and selected_map2["points"]:
+        return selected_map1["points"][0]["customdata"][0]
+#%% Connects DGG Map in first two tabs to time series selection in tab 5
+@app.callback(
+    Output(component_id = 'sensor_select_tab-psychrometric', component_property='value'),
+    Input(component_id = 'DGG_map', component_property='selectedData'),
+    Input(component_id = 'DGG_map_tab-map-daily-view', component_property = 'selectedData'))
+def select_sensors_on_map_psychro(selected_map1, selected_map2):
+    if not selected_map1 and not selected_map2:
+        return ['30 S']
+    if not selected_map1:
+        selected_map1 = {"points":[]}
+    if not selected_map2:
+        selected_map2 = {"points":[]}
+    if len(selected_map1) > len(selected_map2):
+        return [pt["customdata"][0] for pt in selected_map1["points"]]
+    else:
+        return [pt["customdata"][0] for pt in selected_map2["points"]]
+#%% Connects DGG Map in first two tabs to time series selection in tab 6
+@app.callback(
+    Output(component_id = 'sensor_select_tab-hvac', component_property='value'),
+    Input(component_id = 'DGG_map', component_property='selectedData'),
+    Input(component_id = 'DGG_map_tab-map-daily-view', component_property = 'selectedData'))
+def select_sensors_on_map_hvac(selected_map1, selected_map2):
+    if not selected_map1 or "points" not in selected_map1:
+        selected_map1 = {"points": []}
+    if not selected_map2 or "points" not in selected_map2:
+        selected_map2 = {"points": []}
+    if not selected_map1["points"] and not selected_map2["points"]:
+        return "30 S"
+    if selected_map1["points"] and not selected_map2["points"]:
+        return selected_map1["points"][0]["customdata"][0]
+    if selected_map2["points"] and not selected_map1["points"]:
+        return selected_map2["points"][0]["customdata"][0]
+    if selected_map1["points"] and selected_map2["points"]:
+        return selected_map1["points"][0]["customdata"][0]
+    
 #%% Updating Figure for Tab 3 - Timeseries
 @app.callback(
     [Output(component_id='DGG_timeseries_temp', component_property='figure'),
@@ -934,4 +1006,5 @@ def update_weather_tab(start_date, end_date):
 
 #%%
 if __name__ == '__main__':
-    app.run(debug=True,use_reloader=True, port=7080)
+    app.run(debug=True,use_reloader=True, port=7080) #local development
+    #application.run(host='0.0.0.0', port='8080')

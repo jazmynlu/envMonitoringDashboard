@@ -1,17 +1,19 @@
 import plotly.graph_objects as go
 
-def create_base_fig(x_vals, y_vals, img_str, cropped_img):
+def create_base_fig(x_vals, y_vals, circle_coords, img_str, cropped_img):
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
         x=x_vals,
         y=y_vals,
+        customdata=[[k] for k in circle_coords.keys()],
         mode='markers',
         marker=dict(color='red', size=10),
         name='Overlay Points'
     ))
 
     fig.update_layout(
+        clickmode='event+select',
         images=[dict(
             source=img_str,
             xref="x",
@@ -34,6 +36,6 @@ def create_base_fig(x_vals, y_vals, img_str, cropped_img):
             range=[cropped_img.height, 0],
             visible=False
         ),
-        margin=dict(l=0, r=0, t=0, b=0),
+        margin=dict(l=0, r=0, t=0, b=0)
     )
     return fig

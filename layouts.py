@@ -39,7 +39,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
         # Map View Tab
         html.Div([
             html.Div(id='tab-map-view-content', children=[
-                dcc.Store(id = 'base_fig_store', data=create_base_fig(x_vals, y_vals, img_str, cropped_img).to_json()),
+                dcc.Store(id = 'base_fig_store', data=create_base_fig(x_vals, y_vals, circle_coords, img_str, cropped_img).to_json()),
                 html.Div(children=[
                     dcc.DatePickerRange(
                         id='date_range_tab-map-view-content',
@@ -60,8 +60,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                                          'fontSize': '18px', 
                                          'margin': '0 auto',
                                          'fontWeight':'bold'})
-                    ],
-                    style={
+                    ],style={
                         'display':'flex', 
                         'flexDirection':'row', 
                         'justifyContent': 'space-between',
@@ -70,7 +69,9 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         'margin':'20px auto 0 auto', 
                         'width':'75%'}
                 ),
-                dcc.Graph(id='DGG_map',
+                dcc.Graph(
+                    id='DGG_map',
+                    selectedData = {},
                     config={'displayModeBar': True,  
                             'responsive': True, 
                             'autosizable': True,
@@ -84,13 +85,20 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                                 },
                     style = { 'margin':'10px auto 0 auto', 
                              'width':'75%',
-                             'aspect-ratio':'22/13'})
+                             'aspect-ratio':'22/13'}),
+                dcc.Markdown('''
+                #### Pro-Tip
+                Instead of manually selecting multiple sensors in the "Time Series" and "Psychrometric View" tabs, use either the Lasso Select Tool, 
+                the Box Select Tool, or Shift + Click to select sensors of interest. This will automatically populate the other graphs! To deselect, 
+                double-click outside the selection.
+                
+                You can also Lasso Select, Box Select, or Shift+Click on a single sensor to populate the "Time Series Single" and "HVAC Comparison" tabs.
+                ''',style = {'width':'75%', 'margin':'10px auto 0 auto'})
                 ], style={'display': 'block', 'marginTop':'20px'}),  # tab 1 is visible initially
-            
             
             #Daily Map View Tab
             html.Div(id='tab-map-daily-view-content', children=[
-                dcc.Store(id = 'base_fig_store2', data=create_base_fig(x_vals, y_vals, img_str, cropped_img).to_json()),
+                dcc.Store(id = 'base_fig_store2', data=create_base_fig(x_vals, y_vals, circle_coords, img_str, cropped_img).to_json()),
                 html.Div(children=[
                     dcc.DatePickerSingle(
                         id='date_tab-map-daily-view',
@@ -124,8 +132,10 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         marks={i*60: f"{i:02d}:00" for i in range(0, 24)}),  # hourly labels),
                 style = {'width':'75%','margin':'20px auto 0 auto'}),
                 html.Div(children=[
-                dcc.Graph(id='DGG_map_tab-map-daily-view',
-                   config={'displayModeBar': True,  
+                dcc.Graph(
+                    id='DGG_map_tab-map-daily-view',
+                    selectedData = {},
+                    config={'displayModeBar': True,  
                            'responsive': True, 
                            'autosizable': True,
                            'displaylogo':False,
@@ -139,6 +149,15 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                     style = { 'margin':'10px auto 0 auto', 
                              'width':'75%', 
                              'aspect-ratio':'22/13'})]),
+                dcc.Markdown('''
+                #### Pro-Tip
+                Instead of manually selecting multiple sensors in the "Time Series" and "Psychrometric View" tabs, use either the Lasso Select Tool, 
+                the Box Select Tool, or Shift + Click to select sensors of interest. This will automatically populate the other graphs! To deselect, 
+                double-click outside the selection.
+                
+                You can also Lasso Select, Box Select, or Shift+Click on a single sensor to populate the "Time Series Single" and "HVAC Comparison" tabs.
+                
+                ''',style = {'width':'75%', 'margin':'10px auto 0 auto'})
                 ], style={'display': 'none'}),  # hidden initially
             
             # Time Series tab
@@ -157,7 +176,8 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         id='sensor_select_tab-timeseries',
                         multi=True,
                         style={'flex':'1',
-                               'height':'80px',     
+                               'maxHeight':'100px',
+                               'overflowY':'auto',
                                 'color':'darkblue',
                                 'fontSize': '18px', 
                                 'fontFamily':'Verdana',
@@ -170,7 +190,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                     style={'display':'flex', 
                            'flexDirection':'row',
                            'justifyContent':'flex-start',
-                           'alignItems':'center',
+                           'alignItems':'flex-start',
                            'gap':'20px', 
                            'margin':'20px auto 0 auto', 
                            'width':'75%'}),   
@@ -347,7 +367,8 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         id='sensor_select_tab-psychrometric',
                         multi=True,
                         style={'flex':'1',
-                               'height':'45px',     
+                               'maxHeight':'100px',
+                               'overflowY':'auto',
                                 'color':'darkblue',
                                 'fontSize': '18px', 
                                 'fontFamily':'Verdana',
@@ -355,12 +376,12 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                     style={'display':'flex', 
                            'flexDirection':'row',
                            'justifyContent':'space-between',
-                           'alignItems':'left',
+                           'alignItems':'flex-start',
                            'gap':'20px', 
                            'margin':'20px auto 0 auto', 
                            'width':'75%'}    
                     ),
-                dcc.Graph(id='DGG_psycrhometric', figure={}, 
+                dcc.Graph(id='DGG_psycrhometric', figure={'layout':{'clickmode':'event+select'}}, 
                           style = { 'margin':'0 auto', 
                                    'width':'50%', 
                                    'pad':'20px',
@@ -380,7 +401,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
             
             # Curtain Predictions  -- NOT FOR DEPLOYMENT
             # html.Div(id='tab-curtains-content', children=[
-            #     dcc.Store(id = 'base_fig_store_curtain', data=create_base_fig(x_vals, y_vals, img_str, cropped_img).to_json()),
+            #     dcc.Store(id = 'base_fig_store_curtain', data=create_base_fig(x_vals, y_vals, circle_coords, img_str, cropped_img).to_json()),
             #     html.Div(children=[
             #         html.Div(children=[
             #             daq.BooleanSwitch(id ='curtain_boolean', on=True),
