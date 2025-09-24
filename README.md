@@ -7,7 +7,7 @@ The dashboard aims to make the data collected from these monitors more accessibl
 
 Within the Dashboard, there are seven tabs for data visualization: 
 * **Map View** - Gives a bird's eye view of all sensors in DGG with the ability to choose aggregated statistics of a given environmental parameter (Average Temperature, Averaged Temperature Daily Ranges, etc.) over a specified time period.
-* **Daily Map View **- Gives a bird's eye view of all sensors in DGG at a specific date, time, and environmental parameter
+* **Daily Map View**- Gives a bird's eye view of all sensors in DGG at a specific date, time, and environmental parameter
 * **Time Series** - Shows time series plots for all environmental parameters over a specified date period. Designed to compare multiple sensors at a time. There is a toggle to show or hide data that does not reflect that sensor location (for instance, when a sensor is moved to a different location for art installation)
 * **Time Series Single** - Designed to study one sensor at a time, over a specified time period, and provide more detail on the data of that sensor. Cumulative Light Exposure over the specified time period is provided at the bottom. 
 * **Psychrometric View** - Plots multiple sensors together over a given time period on a psychrometric chart. The Bizot Standard is highlighted for easy comparison
