@@ -17,7 +17,7 @@ Within the Dashboard, there are seven tabs for data visualization:
 ## About 'envMonitoringDashboard'
 ### Root Files
 - `README.md` — project documentation  
-- `app.py` — main script to run for Dashboard deployment  
+- `app.py` — main script to run for Dashboard deployment. Runs functions from all other files, and has code for all of the callbacks within the app  
 - `create_base_fig.py` — function to create map view graphs  
 - `data_loaders.py` — loads and organizes preprocessed data and initializes dashboard  
 - `layouts.py` — defines the layout of the webpage  
@@ -69,3 +69,12 @@ Folder of txt files that need to be manually updated every data update!
 
 ## To run:
     python app.py
+Ensure that the last line of app.py connects to the right location:
+```python
+app = Dash(__name__)
+application = app.server
+#---------- All app code -----------
+if __name__ == '__main__':
+    app.run(debug=True, use_reloader=True, port = 7080) #use for local development
+    application.run(host='0.0.0.0', port='8080') #use for deployment
+```
