@@ -32,7 +32,7 @@ rotating_file_handler.setFormatter(logging_format)
 logger.addHandler(console_handler)
 logger.addHandler(rotating_file_handler)
 
-#%% Initializing Dashbaord+
+#%% Initializing Dashbaord
 dfs, date_config, img_str, cropped_img, init_param = initialize_dashboard(df_filepath = 'setup/df_config.txt', 
                          setdates_filepath = 'setup/set_dates.txt',
                          image_path='galleryInfo/2025 - DGG Exhibition Level Blueprint (LACMA).jpg')
@@ -329,8 +329,6 @@ def update_DGG_timeseries_single(start_date,end_date,sensor, switch):
         single_df=single_df.merge(dff, how='inner',on='Date-Time (PST/PDT)')
     
     fig = make_subplots(specs=[[{"secondary_y": True}]])
-
-    # Left axis = Temperature
     fig.add_trace(
         go.Scatter(
             x=single_df["Date-Time (PST/PDT)"],
@@ -349,8 +347,6 @@ def update_DGG_timeseries_single(start_date,end_date,sensor, switch):
         ),
         secondary_y=False
     )
-
-    # Right axis = RH
     fig.add_trace(
         go.Scatter(
             x=single_df["Date-Time (PST/PDT)"],
@@ -361,10 +357,7 @@ def update_DGG_timeseries_single(start_date,end_date,sensor, switch):
         secondary_y=True
     )
 
-    # X-axis
     fig.update_xaxes(title_text="Date")
-
-    # Left y-axis (Temp)
     fig.update_yaxes(
         title_text="Temperature and Dew Point (°C)",
         color = 'black',
@@ -372,8 +365,6 @@ def update_DGG_timeseries_single(start_date,end_date,sensor, switch):
         secondary_y=False,
         automargin=True
     )
-
-    # Right y-axis (RH)
     fig.update_yaxes(
         title_text="Relative Humidity (%)",
         color = 'limegreen',
@@ -381,7 +372,6 @@ def update_DGG_timeseries_single(start_date,end_date,sensor, switch):
         secondary_y=True,
         automargin=True
     )
-
     fig.update_layout(
         hovermode="x unified" ,  # nice combined hover
         xaxis=dict(
@@ -402,7 +392,6 @@ def update_DGG_timeseries_single(start_date,end_date,sensor, switch):
         mode='lines',
         line=dict(color='grey')
     ))
-    
     fig2.add_trace(
         go.Scatter(
             x=rh_24_hour_average["Date-Time (PST/PDT)"],
@@ -411,7 +400,6 @@ def update_DGG_timeseries_single(start_date,end_date,sensor, switch):
             line = dict(color = 'purple', dash='dash')
         )
     )
-    
     fig2.add_trace(
         go.Scatter(
             x=rh_24_hour_range["Date-Time (PST/PDT)"],
@@ -420,12 +408,10 @@ def update_DGG_timeseries_single(start_date,end_date,sensor, switch):
             line = dict(color = 'black')
         )
     )
-    
     date_values = dates['Date-Time (PST/PDT)'].values
     n = len(date_values)
     y_shade_bottom_1 = np.full(n, 40)
     y_shade_top_1 = np.full(n, 60)
-    
     fig2.add_trace(go.Scatter(
             x=np.concatenate([date_values, date_values[::-1]]),
             y=np.concatenate([y_shade_bottom_1, y_shade_top_1[::-1]]),

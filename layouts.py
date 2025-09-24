@@ -71,7 +71,17 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         'width':'75%'}
                 ),
                 dcc.Graph(id='DGG_map',
-                    config={'displayModeBar': True,  'responsive': True, 'autosizable': True},
+                    config={'displayModeBar': True,  
+                            'responsive': True, 
+                            'autosizable': True,
+                            'displaylogo':False,
+                            'toImageButtonOptions':{
+                                'format': 'png',
+                                'filename':'DGG_map_view',
+                                'height':None,
+                                'width':None,
+                                'scale': 3}
+                                },
                     style = { 'margin':'10px auto 0 auto', 
                              'width':'75%',
                              'aspect-ratio':'22/13'})
@@ -115,7 +125,17 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                 style = {'width':'75%','margin':'20px auto 0 auto'}),
                 html.Div(children=[
                 dcc.Graph(id='DGG_map_tab-map-daily-view',
-                    config={'displayModeBar': True,  'responsive': True, 'autosizable': True},
+                   config={'displayModeBar': True,  
+                           'responsive': True, 
+                           'autosizable': True,
+                           'displaylogo':False,
+                           'toImageButtonOptions':{
+                               'format': 'png',
+                               'filename':'Daily_DGG_map_view',
+                               'height':None,
+                               'width':None,
+                               'scale': 3}
+                               },
                     style = { 'margin':'10px auto 0 auto', 
                              'width':'75%', 
                              'aspect-ratio':'22/13'})]),
@@ -156,10 +176,62 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                            'width':'75%'}),   
                 html.Div(
                     children=[
-                        dcc.Graph(id='DGG_timeseries_temp', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
-                        dcc.Graph(id='DGG_timeseries_rh', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
-                        dcc.Graph(id='DGG_timeseries_dp', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
-                        dcc.Graph(id='DGG_timeseries_light', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'})
+                        dcc.Graph(id='DGG_timeseries_temp', 
+                                  figure={}, 
+                                  style={'width':'100%', 'aspect-ratio':'10/3'},
+                                  config={'displayModeBar': True,  
+                                          'responsive': True, 
+                                          'autosizable': True,
+                                          'displaylogo':False,
+                                          'toImageButtonOptions':{
+                                              'format': 'png',
+                                              'filename':'DGG_timeseries_temp',
+                                              'height':None,
+                                              'width':None,
+                                              'scale': 3}
+                                              }),
+                        dcc.Graph(id='DGG_timeseries_rh', 
+                                  figure={}, 
+                                  style={'width':'100%', 'aspect-ratio':'10/3'},
+                                  config={'displayModeBar': True,  
+                                          'responsive': True, 
+                                          'autosizable': True,
+                                          'displaylogo':False,
+                                          'toImageButtonOptions':{
+                                              'format': 'png',
+                                              'filename':'DGG_timeseries_rh',
+                                              'height':None,
+                                              'width':None,
+                                              'scale': 3}
+                                              }),
+                        dcc.Graph(id='DGG_timeseries_dp', 
+                                  figure={}, 
+                                  style={'width':'100%', 'aspect-ratio':'10/3'},
+                                  config={'displayModeBar': True,  
+                                          'responsive': True, 
+                                          'autosizable': True,
+                                          'displaylogo':False,
+                                          'toImageButtonOptions':{
+                                              'format': 'png',
+                                              'filename':'DGG_timeseries_dp',
+                                              'height':None,
+                                              'width':None,
+                                              'scale': 3}
+                                              }),
+                        dcc.Graph(id='DGG_timeseries_light', 
+                                  figure={}, 
+                                  style={'width':'100%', 'aspect-ratio':'10/3'},
+                                  config={'displayModeBar': True,  
+                                          'responsive': True, 
+                                          'autosizable': True,
+                                          'displaylogo':False,
+                                          'toImageButtonOptions':{
+                                              'format': 'png',
+                                              'filename':'DGG_timeseries_light',
+                                              'height':None,
+                                              'width':None,
+                                              'scale': 3}
+                                              })
                     ],
                     style={
                         'display':'flex',
@@ -205,9 +277,48 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                            'width':'75%'} 
                     ),
                 html.Div(children=[            
-                    dcc.Graph(id='DGG_timeseries_single', figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
-                    dcc.Graph(id='DGG_rh_range',figure={}, style={'width':'100%', 'aspect-ratio':'10/3'}),
-                    dcc.Graph(id='DGG_light_plt',figure={}, style={'width':'100%', 'aspect-ratio':'10/3'})],
+                    dcc.Graph(id='DGG_timeseries_single', 
+                              figure={}, 
+                              style={'width':'100%', 'aspect-ratio':'10/3'},
+                              config={'displayModeBar': True,  
+                                      'responsive': True, 
+                                      'autosizable': True,
+                                      'displaylogo':False,
+                                      'toImageButtonOptions':{
+                                          'format': 'png',
+                                          'filename':'DGG_timeseries_T_RH_DP',
+                                          'height':None,
+                                          'width':None,
+                                          'scale': 3}
+                                          }),
+                    dcc.Graph(id='DGG_rh_range',
+                              figure={}, 
+                              style={'width':'100%', 'aspect-ratio':'10/3'},
+                              config={'displayModeBar': True,  
+                                      'responsive': True, 
+                                      'autosizable': True,
+                                      'displaylogo':False,
+                                      'toImageButtonOptions':{
+                                          'format': 'png',
+                                          'filename':'DGG_RH_range',
+                                          'height':None,
+                                          'width':None,
+                                          'scale': 3}
+                                          }),
+                    dcc.Graph(id='DGG_light_plt',
+                              figure={}, 
+                              style={'width':'100%', 'aspect-ratio':'10/3'},
+                              config={'displayModeBar': True,  
+                                      'responsive': True, 
+                                      'autosizable': True,
+                                      'displaylogo':False,
+                                      'toImageButtonOptions':{
+                                          'format': 'png',
+                                          'filename':'DGG_light',
+                                          'height':None,
+                                          'width':None,
+                                          'scale': 3}
+                                          })],
                     style={
                         'display':'flex',
                         'flexDirection':'column',
@@ -253,10 +364,21 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                           style = { 'margin':'0 auto', 
                                    'width':'50%', 
                                    'pad':'20px',
-                                   'aspect-ratio':'5/4'}),
+                                   'aspect-ratio':'5/4'},
+                          config={'displayModeBar': True,  
+                                  'responsive': True, 
+                                  'autosizable': True,
+                                  'displaylogo':False,
+                                  'toImageButtonOptions':{
+                                      'format': 'png',
+                                      'filename':'DGG_psychrometric',
+                                      'height':None,
+                                      'width':None,
+                                      'scale': 3}
+                                      }),
             ], style={'display': 'none'}),
             
-            # Curtain Predictions Tab
+            # Curtain Predictions  -- NOT FOR DEPLOYMENT
             # html.Div(id='tab-curtains-content', children=[
             #     dcc.Store(id = 'base_fig_store_curtain', data=create_base_fig(x_vals, y_vals, img_str, cropped_img).to_json()),
             #     html.Div(children=[
@@ -357,7 +479,18 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                           style = { 'margin':'0 auto', 
                                    'width':'50%', 
                                    'pad':'20px',
-                                   'aspect-ratio':'5/4'}),
+                                   'aspect-ratio':'5/4'},
+                          config={'displayModeBar': True,  
+                                  'responsive': True, 
+                                  'autosizable': True,
+                                  'displaylogo':False,
+                                  'toImageButtonOptions':{
+                                      'format': 'png',
+                                      'filename':'HVAC_Comparison',
+                                      'height':None,
+                                      'width':None,
+                                      'scale': 3}
+                                      }),
             ], style={'display': 'none'}),
             
             # Weather Tab

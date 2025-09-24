@@ -8,12 +8,24 @@ import base64
 import io
 
 def load_sensor_movement(filepath = 'setup/sensor_movement.csv'):
+    """
+    Loads and organizes sensor_movements.csv, a file that is updated manually 
+    to keep track of when sensors are moved away from their original locations 
+    due to installation
+
+    """
     sensor_movement_df= pd.read_csv(filepath)
-    sensor_movement_df['Start'] = pd.to_datetime(sensor_movement_df['Start'], format="%m/%d/%y %H:%M")
-    sensor_movement_df['End'] = pd.to_datetime(sensor_movement_df['End'], format="%m/%d/%y %H:%M")
+    sensor_movement_df['Start'] = pd.to_datetime(sensor_movement_df['Start'], format="%m/%d/%Y %H:%M")
+    sensor_movement_df['End'] = pd.to_datetime(sensor_movement_df['End'], format="%m/%d/%Y %H:%M")
     return sensor_movement_df
 
-def load_dataframes(filepath = 'setup/df_config.txt'):
+def load_dataframes(filepath = 'setup/df_config.txt', filepath_sensor_mvmt ='setup/sensor_movement.csv'):
+    """
+    Reads in pickle files generated with dataPreprocessing.py that is processed
+    locally. Also prunes data from start and end times from sensor_movement_df. 
+    Returns a dictionary of dataframes. Each key is self-explanatory.
+
+    """
     dataframes = {}
     with open(filepath, 'r') as f:
         for line in f:
@@ -25,7 +37,7 @@ def load_dataframes(filepath = 'setup/df_config.txt'):
             value=value.strip().strip("'").strip('"')
             with open(value,'rb') as file:
                 dataframes[name]=pickle.load(file)
-    sensor_mvmt = load_sensor_movement(filepath = 'setup/sensor_movement.csv')
+    sensor_mvmt = load_sensor_movement(filepath = filepath_sensor_mvmt)
     dataframes['sensor_movement'] = sensor_mvmt
     
     postHVAC_pruned = {}
@@ -43,6 +55,10 @@ def load_dataframes(filepath = 'setup/df_config.txt'):
     return dataframes
     
 def load_initial_dashboard_vars(filepath = 'setup/set_dates.txt'):
+    """
+    Loads in initial dates for interactive components of dashboard
+
+    """
     safe_env = {'date': date}
     date_config = {}
     with open(filepath, 'r') as f:
@@ -55,6 +71,10 @@ def load_initial_dashboard_vars(filepath = 'setup/set_dates.txt'):
     return date_config
 
 def crop_map(image_path='galleryInfo/2025 - DGG Exhibition Level Blueprint (LACMA).jpg'):
+    """
+    Prepares image for plotting in DGG Map tabs.
+
+    """
     # Load Image of Map
     Image.MAX_IMAGE_PIXELS = None
     img = Image.open(image_path)
