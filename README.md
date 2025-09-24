@@ -7,7 +7,7 @@ The dashboard aims to make the data collected from these monitors more accessibl
 
 Within the Dashboard, there are seven tabs for data visualization: 
 * **Map View** - Gives a bird's eye view of all sensors in DGG with the ability to choose aggregated statistics of a given environmental parameter (Average Temperature, Averaged Temperature Daily Ranges, etc.) over a specified time period.
-* **Daily Map View **- Gives a bird's eye view of all sensors in DGG at a specific date, time, and environmental parameter
+* **Daily Map View**- Gives a bird's eye view of all sensors in DGG at a specific date, time, and environmental parameter
 * **Time Series** - Shows time series plots for all environmental parameters over a specified date period. Designed to compare multiple sensors at a time. There is a toggle to show or hide data that does not reflect that sensor location (for instance, when a sensor is moved to a different location for art installation)
 * **Time Series Single** - Designed to study one sensor at a time, over a specified time period, and provide more detail on the data of that sensor. Cumulative Light Exposure over the specified time period is provided at the bottom. 
 * **Psychrometric View** - Plots multiple sensors together over a given time period on a psychrometric chart. The Bizot Standard is highlighted for easy comparison
@@ -17,7 +17,7 @@ Within the Dashboard, there are seven tabs for data visualization:
 ## About 'envMonitoringDashboard'
 ### Root Files
 - `README.md` — project documentation  
-- `app.py` — main script to run for Dashboard deployment  
+- `app.py` — main script to run for Dashboard deployment. Runs functions from all other files, and has code for all of the callbacks within the app  
 - `create_base_fig.py` — function to create map view graphs  
 - `data_loaders.py` — loads and organizes preprocessed data and initializes dashboard  
 - `layouts.py` — defines the layout of the webpage  
@@ -69,3 +69,12 @@ Folder of txt files that need to be manually updated every data update!
 
 ## To run:
     python app.py
+Ensure that the last line of app.py connects to the right location:
+```python
+app = Dash(__name__)
+application = app.server
+#---------- All app code -----------
+if __name__ == '__main__':
+    app.run(debug=True, use_reloader=True, port = 7080) #use for local development
+    application.run(host='0.0.0.0', port='8080') #use for deployment
+```
