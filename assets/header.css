@@ -5,7 +5,7 @@
 }
 
 .app-header .app-header--title {
-    font-size: 22px;
+    font-size: 24px;
     padding-left: 5px;
     font-family: Verdana, sans-serif;
 }
@@ -19,12 +19,13 @@
     background-color: #c72a2e;
     color: white;
     font-weight: bold;
-    font family: Verdana, sans-serif;
+    font-family: Verdana, sans-serif;
+    font-size: 14px;
     border: none;
     padding: 8px 16px;
-    cusror: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
 }
 
 .feedback-button:hover {

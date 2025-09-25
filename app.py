@@ -16,6 +16,7 @@ from logging.handlers import RotatingFileHandler
 
 #%% Adding Logger
 app = Dash(__name__)
+app.title = "DGG Dashboard"
 application = app.server
 logger = logging.getLogger(__name__)
 
