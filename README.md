@@ -26,31 +26,32 @@ Within the Dashboard, there are seven tabs for data visualization:
 ---
 
 ### assets/  
-CSS files to define styles in the Dashboard  
-- `header.css`  
-- `lacma-logo.png`  
-- `tabs.css`  
-- `typography.css`  
+CSS files and images to define styles in the Dashboard  
+- 'favicon.ico' — website icon
+- `header.css` — defines style for the header
+- `lacma-logo.png` — lacma logo for header
+- `tabs.css` — defines style for tabs
+- `typography.css` — defines style for text 
 
 ---
 
 ### Data/  
-Folder that holds all data processed in `data_loaders.py`. All new data will be populated here, and older versions will be in the archive folder.
+Folder that holds all data processed in `data_loaders.py`. All new data will be populated here (date collected denoted in xxxx), and older versions will be in the archive folder.
 - `archive/` — ignore files in this folder!  
-- `moving_7day_average_xxxx2025.pkl`  
-- `moving_7day_range_xxxx2025.pkl`  
-- `moving_24hour_average_xxxx2025.pkl`  
-- `moving_24hour_range_xxxx2025.pkl`  
-- `postHVACdata_xxxx2025.pkl`  
-- `preHVACdata.pkl`  
-- `wunderground_xxxx2025.pkl`  
+- `moving_7day_average_xxxx2025.pkl` — dataframes of averages within a 7 day rolling window  
+- `moving_7day_range_xxxx2025.pkl` — dataframes of ranges within a 7 day rolling window
+- `moving_24hour_average_xxxx2025.pkl` — dataframes of averages within a 24 hour rolling window 
+- `moving_24hour_range_xxxx2025.pkl` — dataframes of ranges within a 24 hour rolling window 
+- `postHVACdata_xxxx2025.pkl` — data collected post July 30th, 2025
+- `preHVACdata.pkl` — data collected pre July 30th, 2025
+- `wunderground_xxxx2025.pkl` - scraped weather station data 
 
 ---
 
 ### galleryInfo/  
 Information related to DGG  
-- `2025 - DGG Exhibition Level Blueprint (LACMA).jpg`  
-- `DGG_coords.pkl`  
+- `2025 - DGG Exhibition Level Blueprint (LACMA).jpg` — blueprint of DGG exhibition level 
+- `DGG_coords.pkl` — coordinates of sensors onto DGG blueprint 
 ---
 
 ### logs/  
@@ -60,11 +61,11 @@ Folder for logging errors
 ---
 
 ### setup/  
-Folder of txt files that need to be manually updated every data update!  
+Folder of txt files that need to be manually updated with every data update!  
 - `df_config.txt` — connects variable name in `data_loaders.py` to specific file name  
 - `sensor_movement.csv` — organizes dates and sensors with incorrect information  
 - `set_dates.txt` — sets minimum and maximum dates to show in the dashboard (manual update required)  
-- `set_dates_preHVAC.txt`  
+- `set_dates_preHVAC.txt`  — sets minimum and maximum dates to show in the dashboard (not needed)
 
 
 ## To run:
