@@ -18,9 +18,10 @@
 /* selected tab: sits above the red container border */
 .custom-tab--selected {
     color: black;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
+    border: none !important;
     border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-top-right-radius: 8px; 
     border-top: 4px solid #c72a2e !important;
     border-left: 1px solid lightgrey !important;
     border-right: 1px solid lightgrey !important;
@@ -38,6 +39,6 @@
     right: 0;
     bottom: -5px;             /* same thickness as the container border */
     height: 5px;
-    background: #f9f9f9;      /* same color as the tab/content area */
+    background: #ffffff;      /* same color as the tab/content area */
     z-index: 4;
 }
