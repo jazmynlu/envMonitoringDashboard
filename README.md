@@ -27,7 +27,7 @@ Within the Dashboard, there are seven tabs for data visualization:
 
 ### assets/  
 CSS files and images to define styles in the Dashboard  
-- 'favicon.ico' — website icon
+- `favicon.ico` — website icon
 - `header.css` — defines style for the header
 - `lacma-logo.png` — lacma logo for header
 - `tabs.css` — defines style for tabs
