@@ -18,9 +18,9 @@ from logging.handlers import RotatingFileHandler
 app = Dash(__name__)
 app.title = "DGG Dashboard"
 application = app.server
-logger = logging.getLogger(__name__)
 
 #%% Setting up error logger
+logger = logging.getLogger(__name__)
 
 console_handler = logging.StreamHandler()
 rotating_file_handler = RotatingFileHandler('logs/errors.log', maxBytes=2000)
