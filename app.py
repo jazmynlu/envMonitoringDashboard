@@ -7,7 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from datetime import timedelta, datetime
-import psychrolib
+from psychrolib import GetHumRatioFromRelHum
 import numpy as np
 import json
 from scipy import integrate
@@ -96,7 +96,7 @@ def update_DGG_map(value, start_date,end_date,base_fig_json):
             d = d.drop(['Date-Time (PST/PDT)','Date'],axis=1)
             max_min_temp = pd.concat([max_min_temp, d.max()-d.min()],axis=1)
             average_T = pd.concat([average_T,d.mean()],axis=1)
-        if "Daily Max - Min" in value:
+        if "Range" in value:
             plot_values=max_min_temp.mean(axis=1)
             color_scale = 'viridis'
             title = r'ΔT (°C)'
@@ -121,7 +121,7 @@ def update_DGG_map(value, start_date,end_date,base_fig_json):
             d = d.drop(['Date-Time (PST/PDT)','Date'],axis=1)
             max_min_dailyRH = pd.concat([max_min_dailyRH, d.max()-d.min()],axis=1)
             average_RH = pd.concat([average_RH,d.mean()],axis=1)
-        if "Daily Max - Min" in value:
+        if "Range" in value:
             plot_values=max_min_dailyRH.mean(axis=1)
             color_scale = 'Cividis'
             title = r'ΔRH (%)'
@@ -146,7 +146,7 @@ def update_DGG_map(value, start_date,end_date,base_fig_json):
              d = d.drop(['Date-Time (PST/PDT)','Date'],axis=1)
              max_light = pd.concat([max_light,d.max()],axis=1)
              average_light = pd.concat([average_light,d.mean()],axis=1)
-        if "Daily Max" in value:
+        if "Max" in value:
             plot_values=max_light.mean(axis=1)
             color_scale = 'solar'
             title = 'Max Light (lux)'
@@ -552,11 +552,12 @@ def update_DGG_psychrometric(sensors, start_date, end_date):
     temp_data = dfs['postHVAC']['Temperature , °C'].copy()
     rh_data = rh_data[(rh_data['Date-Time (PST/PDT)'] < end_date) & (rh_data['Date-Time (PST/PDT)'] > start_date)]
     temp_data = temp_data[(temp_data['Date-Time (PST/PDT)'] < end_date) & (temp_data['Date-Time (PST/PDT)'] > start_date)]
+    time_data = temp_data['Date-Time (PST/PDT)']
 
     figure = go.Figure()
 
     for rh in init_param['rh_array']:
-        hr_array = [psychrolib.GetHumRatioFromRelHum(t, rh, init_param['pressure']) * 1000 for t in init_param['t_array']]
+        hr_array = [GetHumRatioFromRelHum(t, rh, init_param['pressure']) * 1000 for t in init_param['t_array']]
         figure.add_trace(go.Scatter(
             x=init_param['t_array'],
             y=hr_array,
@@ -595,20 +596,31 @@ def update_DGG_psychrometric(sensors, start_date, end_date):
         
     )
 
+    pressure = init_param['pressure']
     for sensor in sensors:
-        temp_array = temp_data[sensor]
-        relh_array = rh_data[sensor]/100
-        humidr_array = []
-        for t,rh in zip(temp_array, relh_array):
-            humidr_array.append(psychrolib.GetHumRatioFromRelHum(t, rh, init_param['pressure'])*1000)
+        temp_array = np.array(temp_data[sensor])
+        relh_array = np.array(rh_data[sensor])/100  # relative humidity fraction
+        time_array = np.array(time_data, dtype=str)
+    
+        # vectorized computation of humid ratio
+        humidr_array = np.array([GetHumRatioFromRelHum(t, rh, pressure) for t, rh in zip(temp_array, relh_array)]) * 1000
+    
+        # vectorized customdata
+        custom_post = np.column_stack((relh_array*100, time_array))
+    
         figure.add_trace(go.Scatter(
             x=temp_array,
             y=humidr_array,
             mode='markers',
-            name = sensor
-        )) 
-        
-        
+            name=sensor,
+            customdata=custom_post,
+            hovertemplate=(
+                "Temp: %{x:.2f} °C<br>"
+                "HumRatio: %{y:.2f} g/kg<br>"
+                "RH: %{customdata[0]:.1f}%<br>"
+                "Time: %{customdata[1]}<extra></extra>"
+            )
+        ))
     return figure
 
 #%% Updating Figure for Tab 5 - Curtain Tab
@@ -716,7 +728,7 @@ def update_HVAC_comp(sensor):
 
     # Creates psychrolib template
     for rh in init_param['rh_array']:
-        hr_array = [psychrolib.GetHumRatioFromRelHum(t, rh, init_param['pressure']) * 1000 for t in init_param['t_array']]
+        hr_array = [GetHumRatioFromRelHum(t, rh, init_param['pressure']) * 1000 for t in init_param['t_array']]
         figure.add_trace(go.Scatter(
             x=init_param['t_array'],
             y=hr_array,
@@ -761,7 +773,7 @@ def update_HVAC_comp(sensor):
     wunderground_humidr_array = []
     custom_post = []
     for t, rh, dt in zip(temp_data_wunderground, rh_data_wunderground, time_wunderground):
-        hum_ratio = psychrolib.GetHumRatioFromRelHum(t, rh, init_param['pressure']) * 1000
+        hum_ratio = GetHumRatioFromRelHum(t, rh, init_param['pressure']) * 1000
         wunderground_humidr_array.append(hum_ratio)
         custom_post.append([rh * 100, str(dt)])
 
@@ -783,7 +795,7 @@ def update_HVAC_comp(sensor):
     pre_humidr_array = []
     custom_pre = []
     for t, rh, dt in zip(temp_data_pre, rh_data_pre, time_pre):
-        hum_ratio = psychrolib.GetHumRatioFromRelHum(t, rh, init_param['pressure']) * 1000
+        hum_ratio = GetHumRatioFromRelHum(t, rh, init_param['pressure']) * 1000
         pre_humidr_array.append(hum_ratio)
         custom_pre.append([rh * 100, str(dt)])  
 
@@ -805,7 +817,7 @@ def update_HVAC_comp(sensor):
     post_humidr_array = []
     custom_post = []
     for t, rh, dt in zip(temp_data_post, rh_data_post, time_post):
-        hum_ratio = psychrolib.GetHumRatioFromRelHum(t, rh, init_param['pressure']) * 1000
+        hum_ratio = GetHumRatioFromRelHum(t, rh, init_param['pressure']) * 1000
         post_humidr_array.append(hum_ratio)
         custom_post.append([rh * 100, str(dt)])
 

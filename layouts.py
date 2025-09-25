@@ -49,11 +49,11 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         start_date=date_config['fstart_date'],
                         end_date=date_config['fend_date']),
                     dcc.Dropdown(id="slct_dtype_tab-map-view-content",
-                                options=["Daily Max - Min: Temperature (C)", "Daily Average: Temperature (C)", 
-                                        "Daily Max - Min: Relative Humidity (%)", "Daily Average: Relative Humidity (%)",
-                                        "Daily Max: Light (lux)", "Daily Average: Light (lux)"],
-                                value="Daily Max - Min: Temperature (C)",
-                                style = {'width':'65%', 
+                                options=["Averaged Daily Temperature Range (Δ°C)", "Average Temperature (°C)", 
+                                        "Averaged Daily Relative Humidity Range (Δ%)", "Average Relative Humidity (%)",
+                                        "Average Daily Maximum Light (lux)", "Average Light(lux)"],
+                                value="Averaged Daily Temperature Range (Δ°C)",
+                                style = {'width':'70%', 
                                          'height':'45px',     
                                          'color':'darkblue',
                                          'fontFamily':'Verdana',
@@ -87,13 +87,34 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                              'width':'75%',
                              'aspect-ratio':'22/13'}),
                 dcc.Markdown('''
-                #### Pro-Tip
-                Instead of manually selecting multiple sensors in the "Time Series" and "Psychrometric View" tabs, use either the Lasso Select Tool, 
-                the Box Select Tool, or Shift + Click to select sensors of interest. This will automatically populate the other graphs! To deselect, 
-                double-click outside the selection.
-                
-                You can also Lasso Select, Box Select, or Shift+Click on a single sensor to populate the "Time Series Single" and "HVAC Comparison" tabs.
-                ''',style = {'width':'75%', 'margin':'10px auto 0 auto'})
+                    ### How to Use
+                    
+                    **1. Select Dates of Interest**
+                    * Data is averaged between 12:00am of the first date, and 12:00am of the second date.  
+                    
+                    **2. Select Aggregate Statistic**:  
+                    * **Averaged Daily Temperature Range (Δ°C)** subtracts the daily maximum temperature by the daily minimum temperature and averages those values over the selected dates. Gives a rough idea of the temperature fluctuations of each sensor.  
+                    * **Average Temperature (°C)** takes the average of temperature readings for each sensor over the selected dates.  
+                    * **Averaged Daily Relative Humidity Range (Δ%)** subtracts the daily maximum RH by the daily minimum RH and averages those values over the selected dates. Gives a rough idea of the relative humidity fluctuations of each sensor.  
+                    * **Average Relative Humidity (%)** takes the average of relative humidity readings for each sensor over the selected dates.  
+                    * **Average Daily Maximum Light (lux)** averages the maximum illuminance reading of each day in the selected dates.  
+                    * **Average Light (lux)** takes the average of illuminance readings for each sensor over the selected dates.  
+                    
+                    **3. Plot is generated!**
+                    * The color bar on the right will change color and scale automatically depending on the data being displayed.  
+                    * Use your mouse to hover over specific points to see more information about each sensor.  
+                    * To download the plot, click on the "Download plot as a PNG" button (camera icon).  
+                    * Click and drag on the figure to zoom into an area.  
+                    
+                    #### Pro-Tip
+                    Use the **Lasso Select Tool**, **Box Select Tool**, or **Shift + Click** to select sensors of interest. This will automatically populate the other tabs. To deselect, double-click outside the selection.
+                    ''', 
+                    style={
+                        'width': '75%', 
+                        'margin': '10px auto 0 auto',
+                        'padding': '10px'
+                    })
+
                 ], style={'display': 'block', 'marginTop':'20px'}),  # tab 1 is visible initially
             
             #Daily Map View Tab
@@ -150,14 +171,30 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                              'width':'75%', 
                              'aspect-ratio':'22/13'})]),
                 dcc.Markdown('''
-                #### Pro-Tip
-                Instead of manually selecting multiple sensors in the "Time Series" and "Psychrometric View" tabs, use either the Lasso Select Tool, 
-                the Box Select Tool, or Shift + Click to select sensors of interest. This will automatically populate the other graphs! To deselect, 
-                double-click outside the selection.
-                
-                You can also Lasso Select, Box Select, or Shift+Click on a single sensor to populate the "Time Series Single" and "HVAC Comparison" tabs.
-                
-                ''',style = {'width':'75%', 'margin':'10px auto 0 auto'})
+                    ### How to Use
+                    
+                    **1. Select Date of Interest**  
+                    
+                    **2. Select Environmental Parameter**  
+                    
+                    **3. Select Time**  
+                    * Click or drag slider with mouse. The plot will not update until the left button of the mouse is released!
+                    * Use keyboard arrows to increment time forwards or backwards.
+                    
+                    **4. Plot is generated!**  
+                    * The color bar on the right is static and only changes depending on the selected environmental parameter.  
+                    * Use your mouse to hover over specific points to see more information about each sensor.  
+                    * To download the plot, click on the "Download plot as a PNG" button (camera icon).  
+                    * Click and drag on the figure to zoom into an area.  
+                    
+                    #### Pro-Tip
+                    Use the **Lasso Select Tool**, **Box Select Tool**, or **Shift + Click** to select sensors of interest. This will automatically populate the other tabs. To deselect, double-click outside the selection.
+                    ''', 
+                    style={
+                        'width': '75%', 
+                        'margin': '10px auto 0 auto',
+                        'padding': '10px'
+                    })
                 ], style={'display': 'none'}),  # hidden initially
             
             # Time Series tab
@@ -171,23 +208,24 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         start_date=date_config['fstart_date'],
                         end_date=date_config['fend_date']),
                     dcc.Dropdown(
-                        list(circle_coords.keys()),
-                        ['30 S'],
+                        options = [{'label':k, 'value': k} for k in circle_coords.keys()],
+                        value=['30 S'],
                         id='sensor_select_tab-timeseries',
                         multi=True,
                         style={'flex':'1',
-                               'maxHeight':'100px',
-                               'overflowY':'auto',
+                               'minHeight':'45px',
                                 'color':'darkblue',
                                 'fontSize': '18px', 
                                 'fontFamily':'Verdana',
-                                'fontWeight':'bold'}),
+                                'fontWeight':'bold'},
+                        clearable=True),
                     daq.BooleanSwitch(id='sensor_movement-timeseries',
                                   on=True,
                                   label = 'Hide Sensor Movement Data',
                                   labelPosition='top',
                                   style={'marginLeft': '20px'})],
-                    style={'display':'flex', 
+                    style={'flex':'1',
+                        'display':'flex',
                            'flexDirection':'row',
                            'justifyContent':'flex-start',
                            'alignItems':'flex-start',
@@ -260,6 +298,30 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         'gap':'5px',  # sets vertical spacing between graphs
                         'margin':'10px auto 0 auto',
                         'width':'75%'
+                    }),
+                dcc.Markdown('''
+                    ### How to Use
+                    **1. Select Dates of Interest**  
+                    
+                    **2. Select Sensors of Interest**  
+                    * Type in names of sensors, or
+                    * Select sensors from dropdown menu, or
+                    * Select sensors from DGG maps (see Pro-Tip!)  
+                    
+                    **3. Hide Sensor Movement Data**  
+                    * When data was being collected, sensors were occasionally moved for long periods of time for installation, construction, or other activities. Hide this irrepresentative data by turning on the switch. Show all data by turning off the switch
+                    
+                    **4. Plot is generated!**  
+                    * Temperature, relative humidity, dew point, and light plots are generated 
+                    * Click on the legend to deselect any sensor or the Bizot Standard
+                    * Use your mouse to hover over specific points to see more detailed information  
+                    * To download the plot, click on the "Download plot as a PNG" button (camera icon).  
+                    * Click and drag on the figure to zoom into an area.  
+                    ''', 
+                    style={
+                        'width': '75%', 
+                        'margin': '10px auto 0 auto',
+                        'padding': '10px'
                     })],
             style={'display': 'none'}),  # hidden initially
             
@@ -338,7 +400,32 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                                           'height':None,
                                           'width':None,
                                           'scale': 3}
-                                          })],
+                                          }),
+                    dcc.Markdown('''
+                        ### How to Use
+                        **1. Select Dates of Interest**  
+                        
+                        **2. Select Sensor of Interest**  
+                        * Type in name of sensor, or
+                        * Select sensor from dropdown menu, or
+                        * Select sensor from DGG maps - if multiple sensors selected, will select first from alphabetical order
+                        
+                        **3. Hide Sensor Movement Data**  
+                        * When data was being collected, sensors were occasionally moved for long periods of time for installation, construction, or other activities. Hide this irrepresentative data by turning on the switch. Show all data by turning off the switch
+                        
+                        **4. Plot is generated!**  
+                        * The first plot shows temperature and dew point on the left y-axis and relative humidity on the right y-axis. By default the left and right y-axes are aligned, but you can expand the relative humidity axis by clicking on **Autoscale**. This plot shows whether relative humidity fluctuations are coming from temperature changes or dew point changes.
+                        * The second plot shows the relative humidity, the average 24 hour relative humidity, and the 24 hour range, calculated with a rolling window.
+                        * The third plot showcases the illuminance of the sensor, and calculates the cumulative light exposure of that sensor over the specified time window using numerical integration.
+                        * Use your mouse to hover over specific points to see more information about each sensor.  
+                        * To download the plot, click on the "Download plot as a PNG" button (camera icon).  
+                        * Click and drag on the figure to zoom into an area.  
+                        ''', 
+                        style={
+                            'width': '100%', 
+                            'margin': '10px auto 0 auto',
+                            'padding': '10px'
+                        })],
                     style={
                         'display':'flex',
                         'flexDirection':'column',
@@ -367,15 +454,15 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         id='sensor_select_tab-psychrometric',
                         multi=True,
                         style={'flex':'1',
-                               'maxHeight':'100px',
-                               'overflowY':'auto',
+                               'minHeight':'45px',
                                 'color':'darkblue',
                                 'fontSize': '18px', 
                                 'fontFamily':'Verdana',
                                 'fontWeight':'bold'})],
-                    style={'display':'flex', 
+                    style={'flex':'1',
+                        'display':'flex', 
                            'flexDirection':'row',
-                           'justifyContent':'space-between',
+                           'justifyContent':'flex-start',
                            'alignItems':'flex-start',
                            'gap':'20px', 
                            'margin':'20px auto 0 auto', 
@@ -397,6 +484,26 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                                       'width':None,
                                       'scale': 3}
                                       }),
+                dcc.Markdown('''
+                    ### How to Use
+                    **1. Select Dates of Interest**  
+                    
+                    **2. Select Sensors of Interest**  
+                    * Type in name of sensors, or
+                    * Select sensors from dropdown menu, or
+                    * Select sensors from DGG maps 
+ 
+                    **3. Plot is generated!**  
+                    * A psychrometric chart is a "map" for analyzing moist air, graphically showing the interrelationships between air properties like temperature, humidity, and moisture content.
+                    * Use your mouse to hover over specific points to see more information about each sensor.  
+                    * To download the plot, click on the "Download plot as a PNG" button (camera icon).  
+                    * Click and drag on the figure to zoom into an area.  
+                    ''', 
+                    style={
+                        'width': '75%', 
+                        'margin': '10px auto 0 auto',
+                        'padding': '10px'
+                    })
             ], style={'display': 'none'}),
             
             # Curtain Predictions  -- NOT FOR DEPLOYMENT
@@ -512,6 +619,26 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                                       'width':None,
                                       'scale': 3}
                                       }),
+                dcc.Markdown('''
+                    ### How to Use
+                    **1. Select Sensor of Interest**  
+                    * Type in name of sensors, or
+                    * Select sensors from dropdown menu, or
+                    * Select sensors from DGG maps - if multiple sensors selected, will select first from alphabetical order
+ 
+                    **2. Plot is generated!**  
+                    * A psychrometric chart is a "map" for analyzing moist air, graphically showing the interrelationships between air properties like temperature, humidity, and moisture content.
+                    * This psychrometric chart demonstrates the narrowing of temperature and humidity ranges from the building envelope and the HVAC system. 
+                    * Deselect items by clicking them on the legend
+                    * Use your mouse to hover over specific points to see more information about each sensor.  
+                    * To download the plot, click on the "Download plot as a PNG" button (camera icon).  
+                    * Click and drag on the figure to zoom into an area.  
+                    ''', 
+                    style={
+                        'width': '75%', 
+                        'margin': '10px auto 0 auto',
+                        'padding': '10px'
+                    })
             ], style={'display': 'none'}),
             
             # Weather Tab
@@ -547,7 +674,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                     }),
                 dcc.Markdown('''
                 ### Weather Data
-                Data in these figures scraped from Weather Underground - [KCALOSAN1069 Weather Station](https://www.wunderground.com/dashboard/pws/KCALOSAN1069).
+                Data in these figures scraped from Weather Underground - [KCALOSAN1069 Weather Station](https://www.wunderground.com/dashboard/pws/KCALOSAN1069). Weather station is located at the Grove.
                 ''',style = {'width':'75%', 'margin':'10px auto 0 auto'})
     
         ],style={'display': 'none'})
