@@ -20,6 +20,8 @@ app.title = "DGG Dashboard"
 application = app.server
 logger = logging.getLogger(__name__)
 
+#%% Setting up error logger
+
 console_handler = logging.StreamHandler()
 rotating_file_handler = RotatingFileHandler('logs/errors.log', maxBytes=2000)
 
@@ -1019,5 +1021,5 @@ def update_weather_tab(start_date, end_date):
 
 #%%
 if __name__ == '__main__':
-    app.run(debug=True,use_reloader=True, port=7080) #local development
-    #application.run(host='0.0.0.0', port='8080')
+    #app.run(debug=True,use_reloader=True, port=7080) #local development
+    application.run(host='0.0.0.0', port='8080')
