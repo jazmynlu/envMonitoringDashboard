@@ -7,9 +7,22 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
         html.Div(
             className="app-header",
             children=[
-                html.Img(src='assets/lacma-logo.png', className="app-header--logo"),
-                html.Div('David Geffen Gallery Environmental Monitoring Dashboard', className='app-header--title')],
-            style={'display':'flex','alignItems':'center'}
+                html.Div(
+                    children=[
+                        html.Img(src='assets/lacma-logo.png', className="app-header--logo"),
+                        html.Div('David Geffen Gallery Environmental Monitoring Dashboard', className='app-header--title')],
+                    style={'display':'flex','alignItems':'center','gap':'10px'}),   
+                html.A(
+                    html.Button(
+                        "Submit Feedback",
+                        className='feedback-button'
+                    ),
+                    href="https://forms.gle/2ZVi9vHus1XhnyJN8",
+                    style={'text-decoration': 'none'}
+                    )],
+            style={'display':'flex',
+                   'alignItems':'center',
+                   'justifyContent':'space-between'}
         ),
         #Display tabs
         dcc.Tabs(id="graph_type", value='tab-map-view', 

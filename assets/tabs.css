@@ -1,34 +1,43 @@
 .custom-tabs-container {
     width: 100%;
 }
+
 .custom-tabs {
-    border-top-left-radius: 3px;
+    position: relative;       /* create stacking context reference */
+    overflow: visible;        /* allow children to overlap the container border */
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 5px solid #c72a2e !important; /* continuous red line */
     background-color: #f9f9f9;
-    padding: 0px 0px;
-    border-bottom: 1px solid #d6d6d6;
-    font-family: "Verdana";
+    padding: 0;
+    font-family: Verdana;
+    display: flex;            /* tabs in a row */
+    gap: 6px;
 }
 
-.custom-tab {
-    color:#586069;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    border-top: 3px solid transparent !important;
-    border-left: 0px !important;
-    border-right: 0px !important;
-    border-bottom: 0px !important;
-    background-color: #f7eeed;
-    padding: 2px !important;
-    font-family: "Verdana";
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-}
+/* selected tab: sits above the red container border */
 .custom-tab--selected {
     color: black;
-    box-shadow: 1px 1px 0px white;
+    background-color: #f9f9f9;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-top: 5px solid #c72a2e !important;
     border-left: 1px solid lightgrey !important;
     border-right: 1px solid lightgrey !important;
-    border-top: 5px solid #e30d0d !important;
-    font-family: "Verdana";
+    box-shadow: 1px 1px 0px white;
+    border-bottom: none !important;
+    position: relative;
+    z-index: 3;                /* make sure tab and its ::after sit above the container border */
+}
+
+/* this pseudo-element extends down and hides the container red border directly under the selected tab */
+.custom-tab--selected::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -5px;             /* same thickness as the container border */
+    height: 5px;
+    background: #f9f9f9;      /* same color as the tab/content area */
+    z-index: 4;
 }
