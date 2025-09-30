@@ -603,7 +603,9 @@ def update_DGG_psychrometric(sensors, start_date, end_date):
     for sensor in sensors:
         temp_array = np.array(temp_data[sensor])
         relh_array = np.array(rh_data[sensor])/100  # relative humidity fraction
-        time_array = np.array(time_data, dtype=str)
+        time_array = np.datetime_as_string(time_data, unit='s')
+        time_array = np.char.replace(time_array, 'T', ' ')
+
     
         # vectorized computation of humid ratio
         humidr_array = np.array([GetHumRatioFromRelHum(t, rh, pressure) for t, rh in zip(temp_array, relh_array)]) * 1000
@@ -1021,5 +1023,5 @@ def update_weather_tab(start_date, end_date):
 
 #%%
 if __name__ == '__main__':
-    #app.run(debug=True,use_reloader=True, port=7080) #local development
-    application.run(host='0.0.0.0', port='8080')
+    app.run(debug=True,use_reloader=True, port=7080) #local development
+    #application.run(host='0.0.0.0', port='8080')
