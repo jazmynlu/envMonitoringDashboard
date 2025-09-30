@@ -1023,5 +1023,5 @@ def update_weather_tab(start_date, end_date):
 
 #%%
 if __name__ == '__main__':
-    app.run(debug=True,use_reloader=True, port=7080) #local development
+    app.run(debug=False,use_reloader=False, port=7080) #local development
     #application.run(host='0.0.0.0', port='8080')
