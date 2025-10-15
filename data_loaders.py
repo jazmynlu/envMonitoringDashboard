@@ -7,6 +7,24 @@ import pandas as pd
 import base64
 import io
 
+def F_to_C(F):
+  C = (F - 32) * 5 / 9
+  return C
+
+def T_dp(T,RH):
+    #Magnus Equation
+    #T in C
+    b=17.625
+    c=243.04
+    gamma = np.log(RH/100)+((b*T)/(c+T))
+    return (c*gamma)/(b-gamma)
+
+def C_to_F(C):
+    return (C*(9/5))+32
+
+def lux_to_footcandles(lux):
+    return lux/10.764
+
 def load_sensor_movement(filepath = 'setup/sensor_movement.csv'):
     """
     Loads and organizes sensor_movements.csv, a file that is updated manually 
@@ -39,10 +57,20 @@ def load_dataframes(filepath = 'setup/df_config.txt', filepath_sensor_mvmt ='set
                 dataframes[name]=pickle.load(file)
     sensor_mvmt = load_sensor_movement(filepath = filepath_sensor_mvmt)
     dataframes['sensor_movement'] = sensor_mvmt
+    dataframes['all_coords'] = dataframes['circle_coords']|dataframes['testo_coords']
+    
+    #postHVAC data + Testo data together, before pruning
+    dataframes['all_data'] = {}
+    testo_nanmask = dataframes['testoData']['RH , %'].copy()
+    testo_nanmask.iloc[:,1:] = np.nan
     
     postHVAC_pruned = {}
     for key in dataframes['postHVAC'].keys():
-        df_pruned = dataframes['postHVAC'][key].copy()
+        if key in ['Light , lux', 'Light , fc']:
+            dataframes['all_data'][key] = pd.merge(dataframes['postHVAC'][key],testo_nanmask, how='left')
+        else:
+            dataframes['all_data'][key]=pd.merge(dataframes['postHVAC'][key],dataframes['testoData'][key], how = 'left')
+        df_pruned = dataframes['all_data'][key].copy()
         for _, row in sensor_mvmt.iterrows():
             sensor = row['Sensor']
             start = row['Start']
@@ -50,7 +78,9 @@ def load_dataframes(filepath = 'setup/df_config.txt', filepath_sensor_mvmt ='set
             mask = (df_pruned['Date-Time (PST/PDT)'] >= start) & (df_pruned['Date-Time (PST/PDT)'] <= end)
             df_pruned.loc[mask,sensor]=pd.NA
         postHVAC_pruned[key]=df_pruned
-    dataframes['postHVAC_pruned'] = postHVAC_pruned
+    dataframes['all_data_pruned'] = postHVAC_pruned
+    
+
     
     return dataframes
     
@@ -112,12 +142,11 @@ def initialize_dashboard(df_filepath = 'setup/df_config.txt',
     x_vals = []
     y_vals = []
     
-    for i in dfs['circle_coords'].keys():
-        x_vals.append(dfs['circle_coords'][i][0])
-        y_vals.append(dfs['circle_coords'][i][1])
+    for i in dfs['all_coords'].keys():
+        x_vals.append(dfs['all_coords'][i][0])
+        y_vals.append(dfs['all_coords'][i][1])
 
     # Prepare data for psychrometric calculations
-    psychrolib.SetUnitSystem(psychrolib.SI)
     pressure = 101325
 
     t_array = np.arange(4, 45, 0.1)
@@ -131,10 +160,10 @@ def initialize_dashboard(df_filepath = 'setup/df_config.txt',
         0.8: (33, 27, '80% RH'),
         1.0: (30, 28.5, '100% RH')
     }
-
+    psychrolib.SetUnitSystem(psychrolib.SI)
     t_shade = np.arange(16, 25.1, 0.1)
-    hr_40 = [psychrolib.GetHumRatioFromRelHum(t, 0.4, pressure) * 1000 for t in t_shade]
-    hr_60 = [psychrolib.GetHumRatioFromRelHum(t, 0.6, pressure) * 1000 for t in t_shade]
+    hr_40 = [psychrolib.GetHumRatioFromRelHum(t, 0.4, pressure) for t in t_shade]
+    hr_60 = [psychrolib.GetHumRatioFromRelHum(t, 0.6, pressure) for t in t_shade]
 
 
     return dfs, date_config, img_str, cropped_img, {

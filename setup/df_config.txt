@@ -3,6 +3,7 @@ preHVAC = 'Data/preHVACdata.pkl'
 
 # Data after July 30th deployment, and some processing
 postHVAC = 'Data/postHVACdata_09302025.pkl'
+testoData = 'Data/testo_10142025.pkl'
 moving_24hour_average = 'Data/moving_24hour_average_09302025.pkl'
 moving_24hour_range = 'Data/moving_24hour_range_09302025.pkl'
 moving_7day_average = 'Data/moving_7day_average_09302025.pkl'
@@ -13,3 +14,4 @@ weather_data = 'Data/wunderground_09302025.pkl'
 
 # DGG map coordinates of sensors
 circle_coords = 'galleryInfo/DGG_coords.pkl'
+testo_coords='galleryInfo/testo_coords.pkl'

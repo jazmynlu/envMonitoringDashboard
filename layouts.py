@@ -2,7 +2,7 @@ from dash import html, dcc
 from create_base_fig import create_base_fig
 import dash_daq as daq
 
-def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals):
+def get_layout(date_config, img_str, cropped_img, circle_coords, all_coords, x_vals, y_vals):
     return html.Div([
         html.Div(
             className="app-header",
@@ -12,6 +12,12 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         html.Img(src='assets/lacma-logo.png', className="app-header--logo"),
                         html.Div('David Geffen Gallery Environmental Monitoring Dashboard', className='app-header--title')],
                     style={'display':'flex','alignItems':'center','gap':'10px'}),   
+                html.Div([
+                    daq.BooleanSwitch(
+                        id='unit-system-switch', 
+                        on=True),
+                    html.Div(id='unit-system-switch-label')],
+                    style = {'display':'flex', 'flexDirection':'row'}),
                 html.A(
                     html.Button(
                         "Submit Feedback",
@@ -52,7 +58,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
         # Map View Tab
         html.Div([
             html.Div(id='tab-map-view-content', children=[
-                dcc.Store(id = 'base_fig_store', data=create_base_fig(x_vals, y_vals, circle_coords, img_str, cropped_img).to_json()),
+                dcc.Store(id = 'base_fig_store', data=create_base_fig(x_vals, y_vals, all_coords, img_str, cropped_img).to_json()),
                 html.Div(children=[
                     dcc.DatePickerRange(
                         id='date_range_tab-map-view-content',
@@ -62,10 +68,10 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         start_date=date_config['fstart_date'],
                         end_date=date_config['fend_date']),
                     dcc.Dropdown(id="slct_dtype_tab-map-view-content",
-                                options=["Averaged Daily Temperature Range (Δ°C)", "Average Temperature (°C)", 
-                                        "Averaged Daily Relative Humidity Range (Δ%)", "Average Relative Humidity (%)",
-                                        "Average Daily Maximum Light (lux)", "Average Light(lux)"],
-                                value="Averaged Daily Temperature Range (Δ°C)",
+                                options=["Averaged Daily Temperature Range", "Average Temperature", 
+                                        "Averaged Daily Relative Humidity Range", "Average Relative Humidity",
+                                        "Average Daily Maximum Light", "Average Light"],
+                                value="Averaged Daily Temperature Range",
                                 style = {'width':'70%', 
                                          'height':'45px',     
                                          'color':'darkblue',
@@ -106,12 +112,12 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                     * Data is averaged between 12:00am of the first date, and 12:00am of the second date.  
                     
                     **2. Select Aggregate Statistic**:  
-                    * **Averaged Daily Temperature Range (Δ°C)** subtracts the daily maximum temperature by the daily minimum temperature and averages those values over the selected dates. Gives a rough idea of the temperature fluctuations of each sensor.  
-                    * **Average Temperature (°C)** takes the average of temperature readings for each sensor over the selected dates.  
-                    * **Averaged Daily Relative Humidity Range (Δ%)** subtracts the daily maximum RH by the daily minimum RH and averages those values over the selected dates. Gives a rough idea of the relative humidity fluctuations of each sensor.  
-                    * **Average Relative Humidity (%)** takes the average of relative humidity readings for each sensor over the selected dates.  
-                    * **Average Daily Maximum Light (lux)** averages the maximum illuminance reading of each day in the selected dates.  
-                    * **Average Light (lux)** takes the average of illuminance readings for each sensor over the selected dates.  
+                    * **Averaged Daily Temperature Range** subtracts the daily maximum temperature by the daily minimum temperature and averages those values over the selected dates. Gives a rough idea of the temperature fluctuations of each sensor.  
+                    * **Average Temperature** takes the average of temperature readings for each sensor over the selected dates.  
+                    * **Averaged Daily Relative Humidity Range subtracts the daily maximum RH by the daily minimum RH and averages those values over the selected dates. Gives a rough idea of the relative humidity fluctuations of each sensor.  
+                    * **Average Relative Humidity** takes the average of relative humidity readings for each sensor over the selected dates.  
+                    * **Average Daily Maximum Light** averages the maximum illuminance reading of each day in the selected dates.  
+                    * **Average Light** takes the average of illuminance readings for each sensor over the selected dates.  
                     
                     **3. Plot is generated!**
                     * The color bar on the right will change color and scale automatically depending on the data being displayed.  
@@ -132,7 +138,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
             
             #Daily Map View Tab
             html.Div(id='tab-map-daily-view-content', children=[
-                dcc.Store(id = 'base_fig_store2', data=create_base_fig(x_vals, y_vals, circle_coords, img_str, cropped_img).to_json()),
+                dcc.Store(id = 'base_fig_store2', data=create_base_fig(x_vals, y_vals, all_coords, img_str, cropped_img).to_json()),
                 html.Div(children=[
                     dcc.DatePickerSingle(
                         id='date_tab-map-daily-view',
@@ -221,7 +227,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         start_date=date_config['fstart_date'],
                         end_date=date_config['fend_date']),
                     dcc.Dropdown(
-                        options = [{'label':k, 'value': k} for k in circle_coords.keys()],
+                        options = [{'label':k, 'value': k} for k in all_coords.keys()],
                         value=['30 S'],
                         id='sensor_select_tab-timeseries',
                         multi=True,
@@ -462,7 +468,7 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                         start_date=date_config['fstart_date'],
                         end_date=date_config['fend_date']),
                     dcc.Dropdown(
-                        list(circle_coords.keys()),
+                        list(all_coords.keys()),
                         ['30 S'],
                         id='sensor_select_tab-psychrometric',
                         multi=True,
@@ -519,86 +525,11 @@ def get_layout(date_config, img_str, cropped_img, circle_coords, x_vals, y_vals)
                     })
             ], style={'display': 'none'}),
             
-            # Curtain Predictions  -- NOT FOR DEPLOYMENT
-            # html.Div(id='tab-curtains-content', children=[
-            #     dcc.Store(id = 'base_fig_store_curtain', data=create_base_fig(x_vals, y_vals, circle_coords, img_str, cropped_img).to_json()),
-            #     html.Div(children=[
-            #         html.Div(children=[
-            #             daq.BooleanSwitch(id ='curtain_boolean', on=True),
-            #             dcc.DatePickerSingle(
-            #                 id='date_curtain',
-            #                 min_date_allowed=date_config['fmin_date_allowed'],
-            #                 max_date_allowed=date_config['fmax_date_allowed'],
-            #                 initial_visible_month=date_config['finitial_visible_month'],
-            #                 date=date_config['fdate'])],              
-            #             style={'display':'flex', 
-            #                    'flexDirection':'row',
-            #                    'justifyContent':'space-between',
-            #                    'alignItems':'left',
-            #                    'gap':'20px', 
-            #                    'margin':'20px auto 0 auto', 
-            #                    'width':'75%'}),
-            #         html.Div(
-            #             dcc.Slider(
-            #                 id='time_slider_curtain',
-            #                 min=0,
-            #                 max=1439,  # total minutes in a day
-            #                 step=15,
-            #                 value=0, 
-            #                 marks={i*60: f"{i:02d}:00" for i in range(0, 24)}),  # hourly labels),
-            #         style = {'width':'75%','margin':'20px auto 0 auto'}),
-            #         html.Div(children=[
-            #             dcc.Graph(id='DGG_map_curtain',
-            #                 #config={'displayModeBar': True,  'responsive': True, 'autosizable': True},
-            #                 style = { 'margin':'10px auto 0 auto', 
-            #                          'width':'75%',
-            #                          'aspect-ratio':'22/13'})]),
-            #         ]),
-            #         html.Div(children=[
-            #             html.Div(children=[dcc.Dropdown(
-            #                 list(circle_coords.keys()),
-            #                 ['30 S'],
-            #                 id='sensor_select_curtain',
-            #                 multi=True,
-            #                 style={'width': "100%",
-            #                        'height':'48px',     
-            #                         'color':'darkblue',
-            #                         'fontSize': '18px', 
-            #                         'fontFamily':'Verdana',
-            #                         'fontWeight':'bold'})], 
-            #                 style = {'margin':'0 auto', 
-            #                          'width':'75%', 
-            #                          'padding-top':'20px'}),   
-            #             dcc.Graph(id='DGG_timeseries_curtain', config = {'displayModeBar':True, 'responsive':True, 'autosizable':True})],
-            #             style = { 'margin':'0 auto', 'width':'75%', 'pad':'40px'}),
-            #         dcc.Markdown('''
-            #         ### Selecting Curtains based off Sensors
-                    
-            #         All sensors that have light signficantly cut due to the placement 
-            #         of the curtains had their light levels cut by 7%, as the installed 
-            #         curtains only let through this amount of light.
-                    
-            #         All senosrs that had curtains only partially blocking access to light 
-            #         had their light levels cut by 50% (arbitrary number).
-                    
-            #         The sensors that were designated as 7% are: 
-            #         06 E, 03 E-1, 03 E-2, 11 N, 11 E, 15 E-2, 15 E-1, 13 E, 25 E, 26 E, 27 N, 27 E,
-            #         33 E, 36 E, 36 N, 43 E, 43 W, 41 N, 40 W, 65 S, 65 W, 64 N, 63 W, 58 N, 57 W,
-            #         56 N, 51 S, 52 S, 50 S, 09 W-2, 01 W-2, 63 E, 60 N, 60 W, 57 N, 35 S, 17 W,
-            #         07 N, and 06 W
-                    
-            #         The sensors that were designated as 50% are:
-            #         29 E, 29 N, 32 W, 32 N, 37 N, 55 N, 54 W, 19 E, 19 S, 18 S-2,
-            #         09 W-1, 01 W-1, 01 W-3, and 49 S
-            #                      ''',style = {'width':'75%', 'margin':'10px auto 0 auto'})
-            #     ],             
-            #     style={'display': 'none'}),
-                                 
             # HVAC Comparison Tab
             html.Div(id='tab-hvac-content', children=[
                 html.Div(children=[
                 dcc.Dropdown(
-                    list(circle_coords.keys()),
+                    list(all_coords.keys()),
                     value = '32 N',
                     id='sensor_select_tab-hvac',
                     multi=False,
