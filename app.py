@@ -1,6 +1,8 @@
 from dash import Dash
-from layouts import get_layout
+#from layouts import get_layout
+from new_layout import new_get_layout
 from data_loaders import initialize_dashboard, C_to_F, lux_to_footcandles
+import dash_bootstrap_components as dbc
 from dash import Input, Output, State
 import pandas as pd
 import plotly.express as px 
@@ -15,7 +17,8 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 #%% Adding Logger
-app = Dash(__name__)
+app = Dash(__name__, external_stylesheets=[dbc.themes.GRID])
+#app = Dash(__name__)
 app.title = "DGG Dashboard"
 application = app.server
 
@@ -41,7 +44,8 @@ dfs, date_config, img_str, cropped_img, init_param = initialize_dashboard(df_fil
                          setdates_filepath = 'setup/set_dates.txt',
                          image_path='galleryInfo/2025 - DGG Exhibition Level Blueprint (LACMA).jpg')
 
-app.layout = get_layout(date_config, img_str, cropped_img, dfs['circle_coords'], dfs['all_coords'], init_param['x_vals'], init_param['y_vals'])
+#app.layout = get_layout(date_config, img_str, cropped_img, dfs['circle_coords'], dfs['all_coords'], init_param['x_vals'], init_param['y_vals'])
+app.layout = new_get_layout(date_config, img_str, cropped_img, dfs['circle_coords'], dfs['all_coords'], init_param['x_vals'], init_param['y_vals'])
 
 #%% Updates Tabs
 @app.callback(
@@ -501,7 +505,7 @@ def update_DGG_timeseries_single(start_date,end_date,sensor, on, switch):
             dff = dtypes[d][['Date-Time (PST/PDT)',sensor]].rename(columns={sensor:d})
             single_df=single_df.merge(dff, how='inner',on='Date-Time (PST/PDT)')
         integral_result = integrate.trapezoid(single_df['Light , lux'], dx=0.25)
-        value = f'Cumulative Light Exposure between {start_date} and {end_date} is {integral_result:.2f} lux-hours'
+        value = f'Cumulative Light Exposure ({start_date} to {end_date}) is {integral_result:.2f} lux-hours'
     else:
         units = ['Temperature , °F', 'RH , %', 'Dew Point , °F', 'Light , fc']
         left_yaxis= 'Temperature and Dew Point (°F)'
@@ -509,7 +513,7 @@ def update_DGG_timeseries_single(start_date,end_date,sensor, on, switch):
             dff = dtypes[d][['Date-Time (PST/PDT)',sensor]].rename(columns={sensor:d})
             single_df=single_df.merge(dff, how='inner',on='Date-Time (PST/PDT)')
         integral_result = integrate.trapezoid(single_df['Light , fc'], dx=0.25)
-        value = f'Cumulative Light Exposure between {start_date} and {end_date} is {integral_result:.2f} fc-hours'
+        value = f'Cumulative Light Exposure ({start_date} to {end_date}) is {integral_result:.2f} fc-hours'
     
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     
@@ -877,7 +881,7 @@ def update_HVAC_comp(sensor, on):
         x=temp_data_wunderground,
         y=wunderground_humidr_array,
         mode='markers',
-        name='KCALOSAN1069 Weather Station',
+        name='Outside',
         customdata=custom_post,
         hovertemplate=hovertemplate
     ))
@@ -1122,5 +1126,5 @@ def update_weather_tab(start_date, end_date, on):
 
 #%%
 if __name__ == '__main__':
-    app.run(debug=True,use_reloader=True, port=7080) #local development
+    app.run(debug=False,use_reloader=False, port=7080) #local development
     #application.run(host='0.0.0.0', port='8080')
