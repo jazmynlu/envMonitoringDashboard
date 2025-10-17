@@ -20,7 +20,8 @@ Within the Dashboard, there are seven tabs for data visualization:
 - `app.py` — main script to run for Dashboard deployment. Runs functions from all other files, and has code for all of the callbacks within the app  
 - `create_base_fig.py` — function to create map view graphs  
 - `data_loaders.py` — loads and organizes preprocessed data and initializes dashboard  
-- `layouts.py` — defines the layout of the webpage  
+- `layouts.py` — defines the layout of the webpage (old version)
+- `new_layout.py` — defines layout of the webpage, updated to accomodate phone and tablet browsers
 - `requirements.txt` — list of Python package requirements to run  
 
 ---
